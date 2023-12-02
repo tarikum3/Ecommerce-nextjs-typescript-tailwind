@@ -27,9 +27,7 @@ export default function useLogin() {
   }
   
    const { mutate } = useCustomer()
-  // const { mutate } = useCustomerNew()
-  //  const { providerRef, fetcherRef } = useCommerce()
-  //  const fetcher:Fetcher<Mutation,MutationCustomerAccessTokenCreateArgs>= providerRef.current.fetcher ?? fetcherRef.current
+ 
    
    var options= {
       query: customerAccessTokenCreateMutation,
