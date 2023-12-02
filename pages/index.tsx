@@ -117,63 +117,7 @@ export default function Home({
 
 
 
-// export default function Home(){
-//   const placeholderImg = '/product-img-placeholder.svg'
-//   return (
-//   <>
-  
 
-//      <div
-//           className=' relative flex flex-col items-center justify-center bg-secondary-2 m-28 mx-auto w-4/5 h-[80vh] rounded-xl'>
-//      <div className='animate-ping bg-gray-500 z-0 absolute  h-1/2 w-1/2  '></div>
-//      <h2 className='text-5xl text-center text-primary font-bold m-8 relative '>
-//       New arrival
-//       </h2>
-//          <p className='text-2xl text-center text-primary leading-relaxed relative'>explore new and stylish clothes in our shop</p>
-//          <button className=' bg-primary text-secondary font-bold py-2 px-10 rounded m-8 relative'> explore </button>
-//      </div>
-   
-//      <div className=" m-10 ">
-//       <p className='text-5xl text-secondary font-bold m-8'> Explore Products </p>
-    
-//     <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3 m-10">
-//     {rangeMap(8, (i) => (
-//       // <Skeleton key={i}>
-//         <div className="w-60 h-60" >
-//               <Image
-//               quality="85"
-//               src={ placeholderImg}
-//               alt={'Product Image'}
-//               height={320}
-//               width={320}
-//               className={"w-full  object-cover rounded-lg  sm:col-span-2 lg:col-span-full"}
-//             />
-//         </div>
-//       // </Skeleton>
-//     ))}
-//       </div>
-
-//          <div className=" ">
-
-//             <Link
-//               href="/"
-//               className="flex flex-initial items-center justify-end font-bold    "
-//                >
-            
-//               <span className=" mr-2">more</span>
-//               <span className="rounded-full  mr-2">
-//                 <ArrowRight />
-//               </span>
-//             </Link>
-            
-//           </div>
-          
-//      </div>
-
-
-//      </>
-//      )
-// }
 
 
 
