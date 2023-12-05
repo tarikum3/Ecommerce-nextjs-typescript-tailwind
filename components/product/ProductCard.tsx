@@ -66,7 +66,7 @@ const ProductCard: FC<Props> = ({
     className="transition-colors ease-in-out duration-500"
     >
       <h3
-      className=" max-w-full w-full  leading-extra-loose py-4 px-6 bg-primary text-2xl text-secondary font-bold"
+      className=" max-w-full w-full text-sm leading-extra-loose py-4 px-6 bg-primary md:text-2xl text-secondary font-bold"
       >
         <span
         >
@@ -74,7 +74,7 @@ const ProductCard: FC<Props> = ({
         </span>
       </h3>
       <div 
-      className= "pt-2 px-6 pb-4 text-sm bg-primary text-secondary font-semibold inline-block tracking-wide"
+      className= "pt-2 px-6 pb-4 text-sm bg-primary text-secondary font-semibold inline-block tracking-wide md:text-md"
       >{`${price} ${product.price?.currencyCode}`}</div>
     </div>
         </>

@@ -57,10 +57,10 @@ export default function Home({
       <div
           className=' relative flex flex-col items-center justify-center bg-secondary-2 m-28 mx-auto w-4/5 h-[80vh] rounded-xl'>
         <div className='animate-ping bg-gray-500 z-0 absolute  h-1/2 w-1/2  '></div>
-          <h2 className='text-5xl text-center text-primary font-bold m-8 relative '>New arrival</h2>
+          <h2 className='text-lg text-center text-primary font-bold m-8 relative md:text-2xl lg:text-5xl'>New arrival</h2>
                    
               
-         <p className='text-2xl text-center text-primary leading-relaxed relative'>explore new and stylish clothes in our shop</p>
+         <p className='text-sm text-center text-primary leading-relaxed relative md:text-xl lg:text-2xl'>explore new and stylish clothes in our shop</p>
 
          <Link href={'/collection/new-arrivals'} 
              // className={s.link}
@@ -73,9 +73,9 @@ export default function Home({
 
 
      <div className=" m-10 ">
-      <p className='text-5xl text-secondary font-bold m-5 mx-24'> Explore Products </p>
+      <p className='text-lg text-secondary font-bold m-5 mx-auto md:mx-24 md:text-xl lg:text-5xl '> Explore Products </p>
     
-      <div className="grid grid-cols-1 gap-4 mx-24 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 mx-auto md:mx-24 lg:grid-cols-3">
         {products.slice(0, 9).map((product: any, i: number) => (
           <ProductCard
             key={product.id}
@@ -85,7 +85,7 @@ export default function Home({
         ))}
       </div>
 
-         <div className=" mx-24 ">
+         <div className=" mx-auto md:mx-24 ">
 
             <Link
               href="/search"
@@ -93,7 +93,7 @@ export default function Home({
                >
             
               <span className=" mr-2">more</span>
-              <span className="rounded-full  mr-2">
+              <span className=" mr-2">
                 <ArrowRight />
               </span>
             </Link>

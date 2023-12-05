@@ -37,9 +37,12 @@ export default function useLogin() {
         async function login(input:LoginBody) {
           const{email,password}=input;
           if (!(email && password)) {
-            throw new CommerceError({
+            // throw new CommerceError({
+            //   message: 'An email and password are required to login',
+            // })
+            throw {
               message: 'An email and password are required to login',
-            })
+            }
           }
           
 

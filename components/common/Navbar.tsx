@@ -142,34 +142,26 @@ const [dropdown,setDropdown]=React.useState("");
     >
   
     
-      <div
-      
-       className="relative flex flex-row justify-between py-4 md:py-4"
-       >
+         <div
+              className="relative flex flex-row justify-between py-4 md:py-4">
+                                    
         <div className="flex items-center flex-1">
           <Link href="/" 
-         // className={s.logo} 
-         className="cursor-pointer rounded-full border transform duration-100 ease-in-out hover:shadow-md"
-          aria-label="Logo"
+              // className={s.logo} 
+                className="cursor-pointer rounded-full border transform duration-100 ease-in-out hover:shadow-md"
+                 aria-label="Logo"
           >
-            <Logo />
+            <Logo  />
           </Link>
           <nav 
        
-          className="hidden ml-6 space-x-4 lg:block"
+          className=" ml-6 space-x-4 lg:block"
           >
-            {/* <Link href="/search"
-             //className={s.link}
-             className= "inline-flex items-center leading-6 transition ease-in-out duration-75 cursor-pointer text-primary-3 hover:text-secondary"
-             
-             
-             >
-              All
-            </Link> */}
+        
             {links?.map((l) => (
               <Link href={l.url} key={l.url} 
              // className={s.link}
-             className= "inline-flex items-center leading-6 transition ease-in-out duration-75 cursor-pointer text-primary-3 hover:text-secondary"
+             className= "inline-flex items-center text-md md:text-xl lg:text-2xl text-secondary-2 leading-6 transition ease-in-out duration-75 cursor-pointer  hover:text-secondary"
              
               >
                 {l.name}
@@ -178,7 +170,7 @@ const [dropdown,setDropdown]=React.useState("");
           </nav>
         </div>
        
-        <div className="justify-center flex-1  lg:flex">
+        <div className="justify-center self-end flex-1  lg:flex lg:self-center">
          
             <Searchbar />
           </div>
@@ -190,7 +182,7 @@ const [dropdown,setDropdown]=React.useState("");
             onClick={() => ( handleDropdown("cart"))}
             aria-label="Menu"
                         >
-           <Bag />
+               <Bag className="w-7 h-7" />
               {itemsCount > 0 && (
                 <span
                 
@@ -215,9 +207,11 @@ const [dropdown,setDropdown]=React.useState("");
         isCustomerLoggedIn ? handleDropdown("user") : openModal()}}
         aria-label="Menu"
       >
-       < UserIcon/>
+       < UserIcon className="w-7 h-7"/>
         </button>
-        {dropdown=="user"&&isCustomerLoggedIn&&<div    className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
+        {dropdown=="user"&&isCustomerLoggedIn&&
+        <div    
+          className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
         
           <div className="px-2 py-2 bg-white rounded-md shadow absolute right-0 ">
           {userLinks.map(({ name, href }) => (
@@ -249,9 +243,9 @@ const [dropdown,setDropdown]=React.useState("");
         >
           <span className="flex">
             Theme: <strong>{theme}</strong> {theme == 'dark' ? (
-              <Moon width={20} height={20} />
+              <Moon className="w-2 h-2" />
             ) : (
-              <Sun width={20} height={20} />
+              <Sun className="w-2 h-2" />
             )}
           </span>
       

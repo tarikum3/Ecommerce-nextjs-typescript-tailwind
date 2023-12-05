@@ -1,12 +1,9 @@
 import { FC, memo, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-interface Props {
-  className?: string
-  id?: string
-}
 
-const Searchbar: FC<Props> = ({ className, id = 'search' }) => {
+
+const Searchbar: FC= () => {
   const router = useRouter()
 
   useEffect(() => {
@@ -34,26 +31,26 @@ const Searchbar: FC<Props> = ({ className, id = 'search' }) => {
 
   return (
     <div 
-    //className={cn(s.root, className)}
-    className="relative text-sm bg-primary text-secondary w-full transition-colors duration-150 "
+    
+    className="relative flex items-center text-sm bg-primary text-secondary w-full transition-colors duration-150 "
     >
-      <label className="hidden" htmlFor={id}>
+      <label className="hidden" htmlFor="search">
         Search
       </label>
       <input
-        id={id}
-        //className={s.input}
+        id="search"
+        
         className="placeholder-primary-3 bg-transparent px-3 py-2 appearance-none w-full transition duration-150 ease-in-out pr-10 border border-primary-2 rounded-full focus:outline-none sm:min-w-[300px]"
         placeholder="Search for products..."
         defaultValue={router.query.q}
         onKeyUp={handleKeyUp}
       />
       <div 
-      //className={s.iconContainer}
+     
       className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
       >
         <svg 
-       // className={s.icon} 
+      
         className="h-5 w-5"
         fill="currentColor" viewBox="0 0 20 20">
           <path
