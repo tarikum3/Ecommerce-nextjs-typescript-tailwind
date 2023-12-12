@@ -4,11 +4,9 @@ import { FC,useState } from 'react'
 import type { Product } from '@framework/types'
 import usePrice from '@framework/product/use-price'
 import { SEO } from '@components/common'
-import {  useUI,Button,ErrorMessage } from '@components/ui'
+import {  Button,ErrorMessage } from '@components/ui'
 
-
-import { useAddItem } from '@framework/cart'
-
+import {useAddCartMutation}from '@framework/services/cart'
 interface ProductViewProps {
   product: Product
   relatedProducts: Product[]
@@ -26,8 +24,8 @@ const ProductView: FC<ProductViewProps> = ({ product, relatedProducts }) => {
 
 
   
-  const addItem = useAddItem()
-  const { openSidebar, setSidebarView } = useUI()
+  
+      const[addCart]= useAddCartMutation();
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<null | Error>(null)
 
@@ -36,12 +34,12 @@ const ProductView: FC<ProductViewProps> = ({ product, relatedProducts }) => {
     setLoading(true)
     setError(null)
     try {
-      await addItem({
+  
+   await addCart({
         productId: String(product.id),
         variantId: String(variant ? variant.id : product.variants[0]?.id),
       })
-      setSidebarView('CART_VIEW')
-      openSidebar()
+      
       setLoading(false)
     } catch (err) {
       setLoading(false)

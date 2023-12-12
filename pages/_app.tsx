@@ -1,12 +1,12 @@
 import '@assets/main.css'
 import '@assets/chrome-bug.css'
 
-
 import { FC, ReactNode, useEffect } from 'react'
 import type { AppProps } from 'next/app'
 import { SEO } from '@components/common'
 import { ManagedUIContext } from '@components/ui/context'
-
+import { Provider } from 'react-redux';
+import { store } from '@framework/store/store';
 
 const Noop: FC<{ children?: ReactNode }> = ({ children }) => <>{children}</>
 
@@ -29,12 +29,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <link rel="manifest" href="/site.webmanifest" key="site-manifest" />
     </SEO>
       {/* <Head /> */}
+      <Provider store={store}>
       <ManagedUIContext>
         <Layout pageProps={pageProps}>
           <Component {...pageProps} />
         </Layout>
-      
       </ManagedUIContext>
+      </Provider>
+  
     </>
   )
 }

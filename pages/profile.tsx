@@ -1,7 +1,9 @@
 
-import useCustomer from '@framework/customer/use-customer'
+
 
 import { Layout } from '@components/common'
+import { useGetCustomerQuery} from '@framework/services/customer'
+
 
 
 export async function getStaticProps() {
@@ -13,8 +15,8 @@ export async function getStaticProps() {
 }
 
 export default function Profile() {
-  const { data } = useCustomer()
-
+ // const { data } = useCustomer()
+  const {data }=useGetCustomerQuery();
   return (
     <div className="mx-auto max-w-7xl px-6 w-full pt-4">
       {/* <Text variant="pageHeading">My Profile</Text> */}
@@ -29,14 +31,14 @@ export default function Profile() {
                 Full Name
               </span>
               <span>
-                {data.firstName} {data.lastName}
+                {(data as any)?.firstName} {(data as any)?.lastName}
               </span>
             </div>
             <div className="flex flex-row items-center space-x-4 py-4">
               <span className="text-lg font-medium text-secondary-300 flex-1">
                 Email
               </span>
-              <span>{data.email}</span>
+              <span>{(data as any)?.email}</span>
             </div>
           </div>
         )}

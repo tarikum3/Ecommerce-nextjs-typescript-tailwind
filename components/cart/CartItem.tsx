@@ -5,9 +5,7 @@ import Link from 'next/link'
 
 import type { LineItem } from '@framework/types'
 import usePrice from '@framework/product/use-price'
-import useUpdateItem from '@framework/cart/use-update-item'
-import useRemoveItem from '@framework/cart/use-remove-item'
-
+import {useRemoveCartMutation} from '@framework/services/cart'
 import { Cross, Plus, Minus } from '@components/icons'
 type ItemOption = {
   name: string
@@ -28,12 +26,14 @@ const CartItem = ({
   item: LineItem
   currencyCode: string
 }) => {
-  //const { closeSidebarIfPresent } = useUI()
+ 
   const max=6;
   const [removing, setRemoving] = useState(false)
   const [quantity, setQuantity] = useState<number>(item.quantity)
-  const removeItem = useRemoveItem()
-  const updateItem = useUpdateItem({ item })
+  
+  const[removeCart]=useRemoveCartMutation();
+  
+ 
 
   const { price } = usePrice({
 
@@ -42,24 +42,44 @@ const CartItem = ({
     currencyCode,
   })
 
+  const handleCartUpdate =  async (value:number) => {
+      
+    const debounce= (await import('lodash.debounce')).default;
+    const {useUpdateCartMutation}= (await import('@framework/services/cart'));
+    const[updateCart]=useUpdateCartMutation();
+    return debounce(() => {
+      if(value < 1){
+     (async()=>await removeCart({id: item.id }))
+    }
+    else{
+      (async()=>await updateCart({id: item.id, quantity: value}))
+    }
+
+    }, 500)
+  }
+
+
   const handleChange = async ({
     target: { value },
   }: ChangeEvent<HTMLInputElement>) => {
     setQuantity(Number(value))
-    await updateItem({ quantity: Number(value) })
+    await handleCartUpdate(Number(value));
   }
 
 
   const increaseQuantity = async (n = 1) => {
     const val = Number(quantity) + n
     setQuantity(val)
-    await updateItem({ quantity: val })
+   
+    await handleCartUpdate(val);
   }
 
   const handleRemove = async () => {
     setRemoving(true)
     try {
-      await removeItem(item)
+      //await removeItem(item)
+      await removeCart(item)
+      
     } catch (error) {
       setRemoving(false)
     }

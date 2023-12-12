@@ -1,8 +1,13 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Logo, Button, Input } from '@components/ui'
-import useLogin from '@framework/auth/use-login'
+
 import { useUI } from '@components/ui/context'
 import { validate } from 'email-validator'
+import { useLoginMutation } from '@framework/services/customer'
+import {
+  setCustomerToken,
+} from '@framework/utils'
+
 
 const LoginView: React.FC = () => {
   // Form State
@@ -14,9 +19,9 @@ const LoginView: React.FC = () => {
   const [disabled, setDisabled] = useState(false)
   const { setModalView, closeModal } = useUI()
 
-  //const login = useLogin()
-  const login = useLogin()
+  
  
+  const [login]=useLoginMutation();
   const handleLogin = async (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault()
 
@@ -28,11 +33,28 @@ const LoginView: React.FC = () => {
     try {
       setLoading(true)
       setMessage('')
-      await login({
+      const data=   await login({
         email,
         password,
       })
-      closeModal()
+
+    // const data=  login({ email:"tarikum3@gmail.com", password:"9427230912" });
+   
+      const accessToken = (data as any)?.data?.customerAccessToken?.accessToken
+      const custError=(data as any)?.data?.customerUserErrors
+      if (accessToken) {
+       setCustomerToken(accessToken)
+       closeModal()
+      }
+      if (custError) {
+      
+      if (custError instanceof Array) {
+        setMessage(custError?.map((e: any) => e.message).join('<br/>'))
+      } else {
+        setMessage('Unexpected error')
+      }
+      setDisabled(false)
+    }
     } catch ({ errors }) {
       if (errors instanceof Array) {
         setMessage(errors.map((e: any) => e.message).join('<br/>'))

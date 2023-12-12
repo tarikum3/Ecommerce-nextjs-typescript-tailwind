@@ -1,310 +1,25 @@
 
 
-import { useEffect, useState } from 'react'
-import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
-import { useTheme } from 'next-themes'
+
 import Cookies, { CookieAttributes } from 'js-cookie'
-
-
-import getAllPages from '@framework/operations/getAllPages'
-import getSiteInfo from '@framework/operations/getSiteInfo'
-
 import {
-  SHOPIFY_CHECKOUT_ID_COOKIE,
-  SHOPIFY_CHECKOUT_URL_COOKIE,
   SHOPIFY_COOKIE_EXPIRE,
    SHOPIFY_CUSTOMER_TOKEN_COOKIE
 } from '@framework/const'
 
-import {checkoutCreateMutation} from '@framework/utils/mutations'
+
 import {
-  CheckoutLineItemsAddPayload,
-  CheckoutLineItemsRemovePayload,
-  CheckoutLineItemsUpdatePayload,
-  CheckoutCreatePayload,
-  Checkout,
-  Maybe,
-  CheckoutLineItemInput,
+
   CheckoutErrorCode,
   CheckoutUserError,
   CustomerErrorCode,
   CustomerUserError,
 } from '@framework/schemas/schema'
-import fetcher from '@framework/fetcherNew'
 
-import type { Cart,SearchProductsBody } from '@framework/types'
-import { CommerceError } from '@framework/utils/errors'
-import { normalizeCart } from './normalize'
-//import throwUserErrors from './throw-user-errors'
 import { ValidationError } from '@framework/utils/errors'
 
 
 
-
-
-export async function getSearchStaticProps({
-  preview,
-  locale,
-  locales,
-}: GetStaticPropsContext) {
-  const config = { locale, locales }
-  // const pagesPromise = commerce.getAllPages({ config, preview })
-  // const siteInfoPromise = commerce.getSiteInfo({ config, preview })
-  const pagesPromise = getAllPages({ config, preview })
-  const siteInfoPromise = getSiteInfo({ config, preview })
-  const { pages } = await pagesPromise
-  const { categories, brands } = await siteInfoPromise
-  return {
-    props: {
-      pages,
-      categories,
-      brands,
-    },
-    revalidate: 200,
-  }
-}
-
-export type SearchPropsType = InferGetStaticPropsType<
-  typeof getSearchStaticProps
->
-
-export const getSlug = (path: string) => path.replace(/^\/|\/$/g, '')
-
-
-export function useSearchMeta(asPath: string) {
-  const [pathname, setPathname] = useState<string>('/search')
-  const [category, setCategory] = useState<string | undefined>()
-  const [brand, setBrand] = useState<string | undefined>()
-
-  useEffect(() => {
-    // Only access asPath after hydration to avoid a server mismatch
-    const path = asPath.split('?')[0]
-    const parts = path.split('/')
-
-    let c = parts[2]
-    let b = parts[3]
-
-    if (c === 'designers') {
-      c = parts[4]
-    }
-
-    if (path !== pathname) setPathname(path)
-    if (c !== category) setCategory(c)
-    if (b !== brand) setBrand(b)
-  }, [asPath, pathname, category, brand])
-
-  return { pathname, category, brand }
-}
-
-// Removes empty query parameters from the query object
-export const filterQuery = (query: any) =>
-  Object.keys(query).reduce<any>((obj, key) => {
-    if (query[key]?.length) {
-      obj[key] = query[key]
-    }
-    return obj
-  }, {})
-
-export const getCategoryPath = (path: string, brand?: string) => {
-  const category = getSlug(path)
-
-  return `/search${brand ? `/designers/${brand}` : ''}${
-    category ? `/${category}` : ''
-  }`
-}
-
-export const getDesignerPath = (path: string, category?: string) => {
-  return `/search${path ? `/designers${path}` : ''}${
-    category ? `/${category}` : ''
-  }`
-}
-
-
-
-export  function rangeMap(n: number, fn: (i: number) => any) {
-  const arr = []
-  while (n > arr.length) {
-    arr.push(fn(arr.length))
-  }
-  return arr
-}
-
-
-const COOKIE_NAME = 'accept_cookies'
-
-export const useAcceptCookies = () => {
-  const [acceptedCookies, setAcceptedCookies] = useState(true)
-
-  useEffect(() => {
-    if (!Cookies.get(COOKIE_NAME)) {
-      setAcceptedCookies(false)
-    }
-  }, [])
-
-  const acceptCookies = () => {
-    setAcceptedCookies(true)
-    Cookies.set(COOKIE_NAME, 'accepted', { expires: 365 })
-  }
-
-  return {
-    acceptedCookies,
-    onAcceptCookies: acceptCookies,
-  }
-}
-
-
-
-
-
-export const useToggleTheme = () => {
-  const { theme, themes, setTheme } = useTheme()
-  const [themeValue, setThemeValue] = useState<string>('system')
-
-  useEffect(() => setThemeValue(theme), [theme])
-
-  return { theme: themeValue, setTheme, themes }
-}
-
-
-
-
-export const checkoutCreate = async (
-  lineItems: CheckoutLineItemInput[]
-): Promise<CheckoutCreatePayload> => {
-  //const { checkoutCreate } = await fetch<Mutation, MutationCheckoutCreateArgs>({
-  const {checkoutCreate} = await fetcher<{checkoutCreate:CheckoutCreatePayload}>({
-    query: checkoutCreateMutation,
-    variables: {
-      input: { lineItems },
-    },
-  })
-
-  const checkout = checkoutCreate?.checkout
-
-  if (checkout) {
-    const checkoutId = checkout?.id
-    const options = {
-      expires: SHOPIFY_COOKIE_EXPIRE,
-    }
-    Cookies.set(SHOPIFY_CHECKOUT_ID_COOKIE, checkoutId, options)
-    if (checkout?.webUrl) {
-      Cookies.set(SHOPIFY_CHECKOUT_URL_COOKIE, checkout.webUrl, options)
-    }
-  }
-
-  return checkoutCreate!
-}
-
-export type CheckoutQuery = {
-  checkout: Checkout
-  checkoutUserErrors?: Array<CheckoutUserError>
-}
-
-export type CheckoutPayload =
-  | CheckoutLineItemsAddPayload
-  | CheckoutLineItemsUpdatePayload
-  | CheckoutLineItemsRemovePayload
-  | CheckoutCreatePayload
-  | CheckoutQuery
-
-export const checkoutToCart = (checkoutPayload?: Maybe<CheckoutPayload>): Cart => {
-  throwUserErrors(checkoutPayload?.checkoutUserErrors)
-
-
- 
-  if (!checkoutPayload?.checkout) {
-    throw new CommerceError({
-      message: 'Missing checkout object from response',
-    })
-  }
-
-  return normalizeCart(checkoutPayload?.checkout)
-}
-
-export const getCheckoutId = (id?: string) => {
-  return id ?? Cookies.get(SHOPIFY_CHECKOUT_ID_COOKIE)
-}
-
-export const getCustomerToken = () => Cookies.get(SHOPIFY_CUSTOMER_TOKEN_COOKIE)
-
-export const setCustomerToken = (
-  token: string | null,
-  options?: CookieAttributes
-) => {
-  if (!token) {
-    Cookies.remove(SHOPIFY_CUSTOMER_TOKEN_COOKIE)
-  } else {
-    Cookies.set(
-      SHOPIFY_CUSTOMER_TOKEN_COOKIE,
-      token,
-      options ?? {
-        expires: SHOPIFY_COOKIE_EXPIRE,
-      }
-    )
-  }
-}
-
-
-
-
-
-
-export const getSearchVariables = ({
-  brandId,
-  search,
-  categoryId,
-  sort,
-  locale,
-}: SearchProductsBody) => {
-  let query = ''
-
-  if (search) {
-    query += `(product_type:${search}) OR (title:${search}) OR (tag:${search}) `
-  }
-
-  if (brandId) {
-    query += `${search ? 'AND ' : ''}vendor:${brandId}`
-  }
-
-  return {
-    categoryId,
-    query,
-    ...getSortVariables(sort, !!categoryId),
-    ...(locale && {
-      locale,
-    }),
-  }
-}
-export const getSortVariables = (sort?: string, isCategory: boolean = false) => {
-  let output = {}
-  switch (sort) {
-    case 'price-asc':
-      output = {
-        sortKey: 'PRICE',
-        reverse: false,
-      }
-      break
-    case 'price-desc':
-      output = {
-        sortKey: 'PRICE',
-        reverse: true,
-      }
-      break
-    case 'trending-desc':
-      output = {
-        sortKey: 'BEST_SELLING',
-        reverse: false,
-      }
-      break
-    case 'latest-desc':
-      output = {
-        sortKey: isCategory ? 'CREATED' : 'CREATED_AT',
-        reverse: true,
-      }
-      break
-  }
-  return output
-}
 
 
 
@@ -489,4 +204,32 @@ export const colorMap: Record<string, string> = {
   whitesmoke: '#F5F5F5',
   yellow: '#FFFF00',
   yellowgreen: '#9ACD32',
+}
+
+export const getCustomerToken = () => Cookies.get(SHOPIFY_CUSTOMER_TOKEN_COOKIE)
+
+export const setCustomerToken = (
+  token: string | null,
+  options?: CookieAttributes
+) => {
+  if (!token) {
+    Cookies.remove(SHOPIFY_CUSTOMER_TOKEN_COOKIE)
+  } else {
+    Cookies.set(
+      SHOPIFY_CUSTOMER_TOKEN_COOKIE,
+      token,
+      options ?? {
+        expires: SHOPIFY_COOKIE_EXPIRE,
+      }
+    )
+  }
+}
+
+
+export  function rangeMap(n: number, fn: (i: number) => any) {
+  const arr = []
+  while (n > arr.length) {
+    arr.push(fn(arr.length))
+  }
+  return arr
 }

@@ -1,19 +1,20 @@
 
-import { FC } from 'react'
+import { FC,useState } from 'react'
 import CartItem from './CartItem'
 import { Button } from '@components/ui'
 import { Bag, Cross, Check } from '@components/icons'
-import useCart from '@framework/cart/use-cart'
 import usePrice from '@framework/product/use-price'
 import {
   SHOPIFY_CHECKOUT_URL_COOKIE,
 } from '@framework/const'
 import Cookies from 'js-cookie'
-
+import { useGetCartQuery } from '@framework/services/cart'
+import Clickoutside from '@components/common/Clickoutside'
 const CartView: FC = () => {
   
-  const { data, isLoading, isEmpty } = useCart()
-
+ // const { data, isLoading, isEmpty } = useCart()
+     const {data,isLoading}  =useGetCartQuery();
+     const [display, setDisplay] = useState(true);
   const { price: subTotal } = usePrice(
     data && {
       amount: Number(data.subtotalPrice),
@@ -32,9 +33,13 @@ const CartView: FC = () => {
 
 
   return (
-  
-    <div>
-      {isLoading || isEmpty ? (
+  <Clickoutside status={display} onClick={() => setDisplay(false)}>
+    <div    className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
+              <div className="absolute right-0 w-[80vw] md:w-[700px] h-screen bg-white rounded-md shadow-lg" >
+           
+       
+    
+      {isLoading || data?.lineItems?.length<1 ? (
         <div className="flex-1 px-4 flex flex-col justify-center items-center">
           <span className="border border-dashed border-primary rounded-full flex items-center justify-center w-16 h-16 p-12 bg-secondary text-secondary">
             <Bag className="absolute" />
@@ -57,7 +62,7 @@ const CartView: FC = () => {
             <ul 
             className= 'py-4 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-primary-2 border-primary-2'
             >
-              {data!.lineItems.map((item: any) => (
+              {data?.lineItems?.map((item: any) => (
                 <CartItem
                   key={item.id}
                   item={item}
@@ -98,7 +103,9 @@ const CartView: FC = () => {
           </div>
         </>
       )}
-    </div>
+        </div>
+         </div>
+    </Clickoutside>
   )
 }
 

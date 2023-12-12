@@ -3,36 +3,38 @@ import Link from 'next/link'
 
 import { Logo } from '@components/ui'
 import { Searchbar } from '@components/common'
-//import throttle from 'lodash.throttle'
 
-import useCart from '@framework/cart/use-cart'
 import { useUI } from '@components/ui/context'
 import {  Bag} from '@components/icons'
-import useCustomer from '@framework/customer/use-customer'
+
 import React from 'react'
 
 import type { LineItem} from '@framework/types'
-import { useTheme } from 'next-themes'
-//import { useRouter } from 'next/router'
-import useLogout from '@framework/auth/use-logout'
-import { Moon, Sun ,UserIcon} from '@components/icons'
-//import CartView from '@components/cart/CartView'
-import dynamic from 'next/dynamic'
 
+import { UserIcon} from '@components/icons'
+
+import dynamic from 'next/dynamic'
+import { useGetCustomerQuery } from '@framework/services/customer'
+import { useGetCartQuery } from '@framework/services/cart'
 
 
 const Loading = () => (
-  <div className="w-80 h-80 flex items-center text-center justify-center p-3">
+  <div    
+  className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
+
+  <div className="px-2 py-2 bg-white rounded-md shadow absolute right-0 ">
     {/* <LoadingDots /> */}
     Loading...
   </div>
+  </div>
 )
 
-
-const CartView = dynamic(() => import('@components/cart/CartView'), {
-  loading: Loading,
+const UserView = dynamic(() => import('@components/common/UserView'), {
+  loading: Loading,ssr: false,
 })
-
+const CartView = dynamic(() => import('@components/cart/CartView'), {
+  loading: Loading,ssr: false,
+})
 
 
 
@@ -58,45 +60,39 @@ const links = [
 
 //const Navbar: FC<NavbarProps> = ({ links }) =>{
 const Navbar: FC = () =>{
+
+
+
+  
   const [hasScrolled, setHasScrolled] = useState(false)
   const [itemsCount, setItemsCount] = useState(0);
   
 
-const { data } = useCart()
- const { data: isCustomerLoggedIn } = useCustomer()
- //const router = useRouter()
- const logout = useLogout()
+//const { data } = useCart()
 
- const { theme, setTheme } = useTheme()
+ const {data}  =useGetCartQuery();
+ //const { data: isCustomerLoggedIn } = useCustomer()
+ const {data:isCustomerLoggedIn  }=useGetCustomerQuery();
+
  const {  openModal } = useUI()
+ const [dropdown,setDropdown]=React.useState("");
 
-const [dropdown,setDropdown]=React.useState("");
+ 
 
-  
-  const userLinks = [
-    {
-      name: 'My Profile',
-      href: '/profile',
-    },
-  ]
-  
-//  async function handleClick( href: string) {
-  
-//     const { useRouter } = (await import('next/router'));
-//     const router = useRouter()
-//     router.push(href)
-//   }
-
-  function handleDropdown(current:string=""){
+  const handleDropdown=(current:string="")=>{
+   
     setDropdown(dropdown==current ? "":current);
+   
   }
 
    useEffect(()=>{
     const countItem = (count: number, item: LineItem) => count + item.quantity
     const items = data?.lineItems?.reduce(countItem, 0) ?? 0
     setItemsCount(items);
+  
    },[])
 
+ 
 
   useEffect(() => {
 
@@ -137,9 +133,8 @@ const [dropdown,setDropdown]=React.useState("");
 
   return (
     <div 
-   
-    className={hasScrolled? "sticky top-0 min-h-[74px] bg-primary z-40 transition-all duration-150 border-b px-6 shadow-magical":"sticky top-0 min-h-[74px] bg-primary  z-40 transition-all duration-150 border-b px-6"}
-    >
+        className={hasScrolled? "sticky top-0 min-h-[74px] bg-primary z-40 transition-all duration-150 border-b px-6 shadow-magical":"sticky top-0 min-h-[74px] bg-primary  z-40 transition-all duration-150 border-b px-6"}
+          >
   
     
          <div
@@ -176,9 +171,10 @@ const [dropdown,setDropdown]=React.useState("");
           </div>
       
         <div className="flex items-center justify-end flex-1 space-x-8">
-         
-      <div  className="relative " >
-        <button  
+            <div  className="relative " >
+ 
+   
+                  <button  
             onClick={() => ( handleDropdown("cart"))}
             aria-label="Menu"
                         >
@@ -190,80 +186,31 @@ const [dropdown,setDropdown]=React.useState("");
                  >{itemsCount}</span>
               )}
     
-                    </button>
-        {dropdown=="cart"&&<div    className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
-             <div className="absolute right-0 w-[700px] h-screen bg-white rounded-md shadow-lg" >
-          <CartView /> 
-          </div>
-        </div>
-         }
+           </button>
+        
+         {dropdown =="cart"&&<CartView /> }
+     
+
+         
           </div>
 
-          <div  className="relative " >
-        <button  
-        
-       onClick={() => {
-        handleDropdown("") ;
-        isCustomerLoggedIn ? handleDropdown("user") : openModal()}}
-        aria-label="Menu"
-      >
-       < UserIcon className="w-7 h-7"/>
-        </button>
-        {dropdown=="user"&&isCustomerLoggedIn&&
-        <div    
-          className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
-        
-          <div className="px-2 py-2 bg-white rounded-md shadow absolute right-0 ">
-          {userLinks.map(({ name, href }) => (
-       
-          <a
-         
-            className="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-           
-            onClick={async(e) =>{
-              
-              //handleClick( href)
-              const { useRouter } = (await import('next/router'));
-    const router = useRouter()
-    router.push(href)
-            }}
-            
-            >
-            {name}
-          </a>
-       
-      ))}
-            
-        <a
-         
-           className="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-          onClick={() => {
-            setTheme(theme === 'dark' ? 'light' : 'dark')
-          }}
-        >
-          <span className="flex">
-            Theme: <strong>{theme}</strong> {theme == 'dark' ? (
-              <Moon className="w-2 h-2" />
-            ) : (
-              <Sun className="w-2 h-2" />
-            )}
-          </span>
-      
-        </a>
-      
-        <a
-          //className={cn(s.link, 'border-t border-primary-2 mt-4')}
-          className="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-           
-          onClick={() => logout()}
-        >
-          Logout
-        </a>
-      
+      <div  className="relative " >
+   
 
-          </div>
-        </div>
-         }
+         <button  
+             onClick={() => {
+              handleDropdown("") ;
+              isCustomerLoggedIn ? handleDropdown("user") : openModal()}}
+
+         aria-label="Menu"
+                           >
+        < UserIcon className="w-7 h-7"/>
+         </button>
+       
+        
+      {dropdown =="user"&&isCustomerLoggedIn&&<UserView /> }
+        
+         
       </div>
 
         </div>

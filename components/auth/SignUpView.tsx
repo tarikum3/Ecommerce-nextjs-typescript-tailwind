@@ -3,8 +3,13 @@ import { validate } from 'email-validator'
 import { Info } from '@components/icons'
 import { useUI } from '@components/ui/context'
 import { Logo, Button, Input } from '@components/ui'
-import useSignup from '@framework/auth/use-signup'
 
+import { useLoginMutation,useSignupMutation } from '@framework/services/customer'
+import {
+  setCustomerToken,
+} from '@framework/utils'
+ //const [login]=useLoginMutation();
+  
 
 const SignUpView: FC = () => {
   // Form State
@@ -18,7 +23,9 @@ const SignUpView: FC = () => {
   const [disabled, setDisabled] = useState(false)
 
   //const signup = useSignup()
-  const signup = useSignup()
+  //const signup = useSignup()
+const [login]=useLoginMutation();
+const [signup]=useSignupMutation();
   const { setModalView, closeModal } = useUI()
 
   const handleSignup = async (e: React.SyntheticEvent<EventTarget>) => {
@@ -38,6 +45,12 @@ const SignUpView: FC = () => {
         lastName,
         password,
       })
+     const data= await login( { email, password })
+     const accessToken = (data as any)?.data.customerAccessToken?.accessToken
+        
+      if (accessToken) {
+        setCustomerToken(accessToken)
+      }
       closeModal()
     } catch ({ errors }) {
       console.error(errors)

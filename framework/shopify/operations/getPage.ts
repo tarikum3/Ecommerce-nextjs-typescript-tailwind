@@ -7,7 +7,7 @@ import {
 //import { GetPageOperation } from '@framework/types/page'
 //import getPageQuery from '@framework/utils/queries/get-page-query'
 import {getPageQuery} from '@framework/utils/queries'
-import fetcher from '@framework/fetcherNew'
+import fetcher from '@framework/fetcher'
 export default async function getPage({
     query = getPageQuery,
     variables,

@@ -24,7 +24,7 @@ import { ProductCard } from '@components/product'
   
   
  
-  import fetcher from '@framework/fetcherNew'
+  import fetcher from '@framework/fetcher'
 
   export async function getStaticProps({
     params,

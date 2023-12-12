@@ -1,5 +1,5 @@
 
-import fetcher from "@framework/fetcherNew"
+import fetcher from "@framework/fetcher"
 import {
     GetAllProductsQuery,
     Product as ShopifyProduct,

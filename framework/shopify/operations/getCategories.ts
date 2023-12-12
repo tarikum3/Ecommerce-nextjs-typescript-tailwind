@@ -3,7 +3,7 @@ import type { CollectionEdge } from '@framework/schemas/schema'
 import { normalizeCategory } from '@framework/utils/normalize'
 //import getSiteCollectionsQuery from '@framework/utils/queries/get-all-collections-query'
 import {getSiteCollectionsQuery} from '@framework/utils/queries'
-import fetcher from '@framework/fetcherNew'
+import fetcher from '@framework/fetcher'
 
 export default async function getCategories({
     query = getSiteCollectionsQuery,

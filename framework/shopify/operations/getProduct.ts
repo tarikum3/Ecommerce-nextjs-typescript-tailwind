@@ -1,4 +1,4 @@
-import fetcher from "@framework/fetcherNew"
+import fetcher from "@framework/fetcher"
 //import { GetProductOperation } from '@framework/types/product'
 import { normalizeProduct, getProductQuery } from '@framework/utils'
 import {

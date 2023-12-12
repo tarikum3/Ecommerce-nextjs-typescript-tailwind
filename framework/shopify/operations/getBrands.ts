@@ -5,7 +5,7 @@ import {
   
   //import getAllProductVendors from '../@framework/utils/queries/get-all-product-vendors-query'
   import {getAllProductVendors} from '@framework/utils/queries'
-  import fetcher from '@framework/fetcherNew'
+  import fetcher from '@framework/fetcher'
 
 
   export default async function getBrands({
