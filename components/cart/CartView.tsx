@@ -1,8 +1,7 @@
 
 import { FC,useState } from 'react'
 import CartItem from './CartItem'
-import { Button } from '@components/ui'
-import { Bag, Cross, Check } from '@components/icons'
+import { Bag,  } from '@components/icons'
 import usePrice from '@framework/product/use-price'
 import {
   SHOPIFY_CHECKOUT_URL_COOKIE,
@@ -93,12 +92,12 @@ const CartView: FC = () => {
             </div>
             <div>
           
-            
-             
-                <Button href={checkoutUrl} Component="a" width="100%">
-                  Proceed to Checkout
-                </Button>
-             
+                <a
+                className="bg-secondary inline-flex items-center justify-center w-full max-h-[64px] text-primary p-5 text-sm"
+                href={checkoutUrl}>
+                  
+                     Proceed to Checkout
+                </a>
             </div>
           </div>
         </>

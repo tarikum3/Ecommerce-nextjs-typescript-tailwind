@@ -1,10 +1,10 @@
 import { FC,useState, useEffect, } from 'react'
 import Link from 'next/link'
 
-import { Logo } from '@components/ui'
+import { Logo } from '@components'
 import { Searchbar } from '@components/common'
 
-import { useUI } from '@components/ui/context'
+import { useUI } from '@components/context'
 import {  Bag} from '@components/icons'
 
 import React from 'react'
@@ -133,10 +133,8 @@ const Navbar: FC = () =>{
 
   return (
     <div 
-        className={hasScrolled? "sticky top-0 min-h-[74px] bg-primary z-40 transition-all duration-150 border-b px-6 shadow-magical":"sticky top-0 min-h-[74px] bg-primary  z-40 transition-all duration-150 border-b px-6"}
+        className={`${hasScrolled? 'shadow-magical ':''}sticky top-0 min-h-[74px] bg-primary  z-40 transition-all duration-150 border-b px-6`}
           >
-  
-    
          <div
               className="relative flex flex-row justify-between py-4 md:py-4">
                                     

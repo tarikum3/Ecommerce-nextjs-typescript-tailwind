@@ -15,11 +15,11 @@ export async function getStaticProps() {
 }
 
 export default function Profile() {
- // const { data } = useCustomer()
+
   const {data }=useGetCustomerQuery();
   return (
     <div className="mx-auto max-w-7xl px-6 w-full pt-4">
-      {/* <Text variant="pageHeading">My Profile</Text> */}
+     
       <h1 className="pt-1 pb-4 text-2xl leading-7 font-bold tracking-wide" >
       My Profile
               </h1>

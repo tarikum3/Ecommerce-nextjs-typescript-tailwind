@@ -22,7 +22,8 @@
       "@assets/*": ["assets/*"],
       "@framework": ["framework/shopify"],
       "@framework/*": ["framework/shopify/*"],
-      "@components/*": ["components/*"]
+      "@components": ["components"],
+      "@components/*": ["components/*"],
     },
     "incremental": true
   },

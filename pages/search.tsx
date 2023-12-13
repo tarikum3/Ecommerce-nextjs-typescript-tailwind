@@ -1,13 +1,10 @@
-// import { getSearchStaticProps } from '@framework/utils'
-
-
 
 
 import { useState } from 'react'
-import type { Product } from '@framework/types'
+
 import { Layout } from '@components/common'
 import { ProductCard } from '@components/product'
-import {rangeMap} from '@framework/utils'
+
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import getAllProducts from '@framework/operations/getAllProducts'
 
@@ -52,20 +49,14 @@ export default function Search({
 
 
   return (
-    <div className='mx-auto max-w-7xl px-6 w-full'>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-3 mb-20">
-   
-        {/* Products */}
-        <div className="col-span-8 order-3 lg:order-none">
+   <>
+     
           
-            <div className="mb-12 transition ease-in duration-75">
+            <div className="m-12 text-xl text-transition ease-in duration-75 mx-auto md:mx-24">
               
                 <>
                   <span
-                    // className={cn('animated', {
-                    //   fadeIn: data.found,
-                    //   hidden: !data.found,
-                    // })}
+         
                     className={!found? "hidden":""}
                   >
                     Showing {products?.length} results{' '}
@@ -76,10 +67,7 @@ export default function Search({
                     )}
                   </span>
                   <span
-                    // className={cn('animated', {
-                    //   fadeIn: !data.found,
-                    //   hidden: data.found,
-                    // })}
+                
                     className={found? "hidden":""}
                   >
                    
@@ -92,33 +80,24 @@ export default function Search({
               
             </div>
           
-          {products ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product: Product) => (
-                <ProductCard
-                  //variant="simple"
-                  key={product.path}
-                  //className="animated fadeIn"
-                  product={product}
-                 
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {rangeMap(12, (i) => (
-                // <Skeleton key={i}>
-                  <div className="w-60 h-60" />
-                // </Skeleton>
-                
-              ))}
-            </div>
-          )}{' '}
-        </div>
+         
+   
 
+            <div className="grid grid-cols-1 gap-4 mx-auto md:mx-24 lg:grid-cols-3">
+            {products?.map((product: any, i: number) => (
+              <ProductCard
+                key={product.id}
+                product={product}
     
-      </div>
-    </div>
+              />
+            ))}
+          </div>
+
+       
+
+          </>
+    
+   
   )
 }
 

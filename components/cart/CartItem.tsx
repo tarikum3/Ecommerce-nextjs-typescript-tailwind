@@ -18,7 +18,7 @@ const placeholderImg = '/product-img-placeholder.svg'
 
 const CartItem = ({
   item,
- // variant = 'default',
+
   currencyCode,
   ...rest
 }: {
@@ -77,7 +77,7 @@ const CartItem = ({
   const handleRemove = async () => {
     setRemoving(true)
     try {
-      //await removeItem(item)
+      
       await removeCart(item)
       
     } catch (error) {

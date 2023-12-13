@@ -4,7 +4,7 @@ import { FC,useState } from 'react'
 import type { Product } from '@framework/types'
 import usePrice from '@framework/product/use-price'
 import { SEO } from '@components/common'
-import {  Button,ErrorMessage } from '@components/ui'
+import {  Button,ErrorMessage } from '@components'
 
 import {useAddCartMutation}from '@framework/services/cart'
 interface ProductViewProps {

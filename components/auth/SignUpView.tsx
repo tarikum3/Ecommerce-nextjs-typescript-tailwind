@@ -1,8 +1,8 @@
 import { FC, useEffect, useState, useCallback } from 'react'
 import { validate } from 'email-validator'
 import { Info } from '@components/icons'
-import { useUI } from '@components/ui/context'
-import { Logo, Button, Input } from '@components/ui'
+import { useUI } from '@components/context'
+import { Logo, Button, Input } from '@components'
 
 import { useLoginMutation,useSignupMutation } from '@framework/services/customer'
 import {
@@ -111,7 +111,7 @@ const [signup]=useSignupMutation();
         </span>
         <div className="pt-2 w-full flex flex-col">
           <Button
-            variant="slim"
+            
             type="submit"
             loading={loading}
             disabled={disabled}

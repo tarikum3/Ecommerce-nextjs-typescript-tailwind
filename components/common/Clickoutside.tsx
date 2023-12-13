@@ -1,4 +1,4 @@
-import {FC,useEffect,useState,useRef,ReactElement,ReactNode} from 'react'
+import {FC,useEffect,useRef,ReactElement,ReactNode} from 'react'
 
 interface ClickOutsideProps {
   nameFor?:string

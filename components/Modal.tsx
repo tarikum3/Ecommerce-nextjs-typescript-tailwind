@@ -1,5 +1,5 @@
 import { FC, useRef, useEffect, useCallback, ReactNode } from 'react'
-
+//import s from './Modal.module.css'
 import { Cross } from '@components/icons'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 

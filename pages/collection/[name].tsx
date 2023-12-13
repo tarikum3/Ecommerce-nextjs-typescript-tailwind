@@ -90,9 +90,7 @@ import { ProductCard } from '@components/product'
     
    
   
-    // if (error) {
-    //   return <ErrorMessage error={error} />
-    // }
+  
   
   
   

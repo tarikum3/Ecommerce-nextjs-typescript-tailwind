@@ -1,7 +1,7 @@
 
 import dynamic from 'next/dynamic'
 import LoginView from '@components/auth/LoginView'
-import { useUI } from '@components/ui/context'
+import { useUI } from '@components/context'
 import { Navbar, Footer } from '@components/common'
 
 

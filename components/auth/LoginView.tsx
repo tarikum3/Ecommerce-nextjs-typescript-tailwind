@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Logo, Button, Input } from '@components/ui'
+import { Logo, Button, Input } from '@components'
 
-import { useUI } from '@components/ui/context'
+import { useUI } from '@components/context'
 import { validate } from 'email-validator'
 import { useLoginMutation } from '@framework/services/customer'
 import {
@@ -104,7 +104,7 @@ const LoginView: React.FC = () => {
         <Input type="password" placeholder="Password" onChange={setPassword} />
 
         <Button
-          variant="slim"
+        
           type="submit"
           loading={loading}
           disabled={disabled}

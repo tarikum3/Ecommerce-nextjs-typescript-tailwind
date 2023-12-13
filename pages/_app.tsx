@@ -4,7 +4,7 @@ import '@assets/chrome-bug.css'
 import { FC, ReactNode, useEffect } from 'react'
 import type { AppProps } from 'next/app'
 import { SEO } from '@components/common'
-import { ManagedUIContext } from '@components/ui/context'
+import { ManagedUIContext } from '@components/context'
 import { Provider } from 'react-redux';
 import { store } from '@framework/store/store';
 

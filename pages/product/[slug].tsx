@@ -20,13 +20,13 @@ export async function getStaticProps({
   const config = { locale, locales }
 
 
-  // const productPromise = commerce.getProduct({
+ 
     const productPromise = getProduct({
     variables: { slug: params!.slug },
     config,
     preview,
   })
-  // const allProductsPromise = commerce.getAllProducts({
+  
   const allProductsPromise = getAllProducts({
     variables: { first: 4 },
     config,

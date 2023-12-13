@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import Link from 'next/link'
 import { Github } from '@components/icons'
-import { Logo  } from '@components/ui'
+import { Logo  } from '@components'
 
 const links = [
   {
@@ -43,7 +43,7 @@ const Footer: FC = () => {
               <span className="rounded-full border border-secondary-3 mr-2">
                 <Logo />
               </span>
-              <span>Delimarkaddis</span>
+              <span>Modalinda</span>
             </Link>
           </div>
 
