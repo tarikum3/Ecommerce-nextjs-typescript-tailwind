@@ -29,7 +29,7 @@ const ForgotPassword = dynamic(
   }
 )
 
-const Modal = dynamic(() => import('@components/ui/Modal'), {
+const Modal = dynamic(() => import('@components/Modal'), {
   ...dynamicProps,
   ssr: false,
 })
