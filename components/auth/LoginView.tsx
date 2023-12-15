@@ -83,7 +83,7 @@ const LoginView: React.FC = () => {
   return (
     <form
       onSubmit={handleLogin}
-      className="w-80 flex flex-col justify-between p-3"
+      className="w-80 flex flex-col justify-between p-3 border rounded-lg"
     >
       <div className="flex justify-center pb-12 ">
         <Logo width="64px" height="64px" />

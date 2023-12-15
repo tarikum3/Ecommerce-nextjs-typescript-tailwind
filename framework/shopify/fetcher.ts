@@ -14,7 +14,7 @@ export type FetcherOptions<Body = any> = {
     locale?:string
   }
 
- const fetchGraphqlApi: Fetcher = async (
+ const fetchGraphqlApi: <T = any, B = any>(options: FetcherOptions<B>) => T | Promise<T> = async (
     {
         url = API_URL,
         method = 'POST',
@@ -57,7 +57,7 @@ export type FetcherOptions<Body = any> = {
     }
   }
   //export default fetchGraphqlApi
-  const fetcherNew:<T = any, B = any>(options: FetcherOptions<B>) => T | Promise<T>=fetchGraphqlApi;
-  export default fetcherNew
+  //const fetcherNew:<T = any, B = any>(options: FetcherOptions<B>) => T | Promise<T>=fetchGraphqlApi;
+  export default fetchGraphqlApi
     
   

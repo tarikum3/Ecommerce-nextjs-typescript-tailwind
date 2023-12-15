@@ -19,7 +19,7 @@ const Input: React.FC<InputProps> = (props) => {
   return (
     <label>
       <input
-        className={`${className} bg-primary py-2 px-6 w-full appearance-none 
+        className={`${className} bg-primary py-2 px-6 w-full appearance-none rounded-xl
          pr-10 border border-primary-3 text-secondary-3 focus:outline-none shadow-outline-normal`}
         onChange={handleOnChange}
         autoComplete="off"
