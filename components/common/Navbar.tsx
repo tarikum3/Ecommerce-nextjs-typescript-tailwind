@@ -5,7 +5,7 @@ import { Logo } from '@components'
 import { Searchbar } from '@components/common'
 
 import { useUI } from '@components/context'
-import {  Bag} from '@components/icons'
+import {  Bag,Search as SearchIcon} from '@components/icons'
 
 import React from 'react'
 
@@ -66,7 +66,7 @@ const Navbar: FC = () =>{
   
   const [hasScrolled, setHasScrolled] = useState(false)
   const [itemsCount, setItemsCount] = useState(0);
-  
+  const [searchExtend, setSearchExtend] = useState(false)
 
 //const { data } = useCart()
 
@@ -109,8 +109,7 @@ const Navbar: FC = () =>{
     const handleScroll = async () => {
       
       const throttle= (await import('lodash.throttle')).default;
-
-      return throttle(() => {
+       const fun= throttle(() => {
         const offset = 0
         const { scrollTop } = document.documentElement
         const scrolled = scrollTop > offset
@@ -119,6 +118,16 @@ const Navbar: FC = () =>{
           setHasScrolled(scrolled)
         }
       }, 200)
+      fun();
+      // return throttle(() => {
+      //   const offset = 0
+      //   const { scrollTop } = document.documentElement
+      //   const scrolled = scrollTop > offset
+  
+      //   if (hasScrolled !== scrolled) {
+      //     setHasScrolled(scrolled)
+      //   }
+      // }, 200)
     }
 
 
@@ -133,12 +142,12 @@ const Navbar: FC = () =>{
 
   return (
     <div 
-        className={`${hasScrolled? 'shadow-magical ':''}sticky top-0 min-h-[74px] bg-primary  z-40 transition-all duration-150 border-b px-6`}
+        className={`${hasScrolled? 'shadow-magical ':''}sticky  top-0 min-h-[74px] bg-primary  z-40 transition-all duration-150 border-b px-6`}
           >
          <div
-              className="relative flex flex-row justify-between py-4 md:py-4">
+              className="relative flex flex-row items-center  justify-between py-4 md:py-4">
                                     
-        <div className="flex items-center flex-1">
+        <div className="flex items-center flex-auto ">
           <Link href="/" 
               // className={s.logo} 
                 className="cursor-pointer rounded-full border transform duration-100 ease-in-out hover:shadow-md"
@@ -148,13 +157,13 @@ const Navbar: FC = () =>{
           </Link>
           <nav 
        
-          className=" ml-6 space-x-4 lg:block"
+          className={` ${searchExtend ?'hidden':''} flex-auto ml-6 space-x-4 `}   
           >
         
             {links?.map((l) => (
               <Link href={l.url} key={l.url} 
              // className={s.link}
-             className= "inline-flex items-center text-md md:text-xl lg:text-2xl text-secondary-2 leading-6 transition ease-in-out duration-75 cursor-pointer  hover:text-secondary"
+             className= "inline-flex items-center text-2xl text-secondary-2 leading-6 transition ease-in-out duration-75 cursor-pointer  hover:text-secondary"
              
               >
                 {l.name}
@@ -163,12 +172,19 @@ const Navbar: FC = () =>{
           </nav>
         </div>
        
-        <div className="justify-center self-end flex-1  lg:flex lg:self-center">
+        <div className={` ${searchExtend ?'':'hidden'} sm:block flex-auto `}
+        onClick={()=>{setSearchExtend(true)}}
+        >
          
             <Searchbar />
           </div>
       
-        <div className="flex items-center justify-end flex-1 space-x-8">
+        <div className="flex items-center justify-end  flex-auto space-x-8">
+
+      <button 
+      className={`${searchExtend ?'hidden':''} sm:hidden`}
+      onClick={()=>{setSearchExtend(true)}}
+      ><SearchIcon /></button> 
             <div  className="relative " >
  
    

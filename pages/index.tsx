@@ -57,14 +57,14 @@ export default function Home({
       <div
           className=' relative flex flex-col items-center justify-center bg-secondary-2 m-28 mx-auto w-4/5 h-[80vh] rounded-xl'>
         <div className='animate-ping bg-gray-500 z-0 absolute  h-1/2 w-1/2  '></div>
-          <h2 className='text-lg text-center text-primary font-bold m-8 relative md:text-2xl lg:text-5xl'>New arrival</h2>
+          <h2 className='text-5xl text-center text-primary font-bold m-8 relative md:text-7xl '>New arrivals</h2>
                    
               
-         <p className='text-sm text-center text-primary leading-relaxed relative md:text-xl lg:text-2xl'>explore new and stylish clothes in our shop</p>
+         <p className='text-2xl text-center text-primary-2 leading-relaxed relative lg:text-4xl'>explore new and stylish clothes in our shop</p>
 
          <Link href={'/collection/new-arrivals'} 
              // className={s.link}
-             className= "bg-primary text-secondary font-bold py-2 px-10 rounded m-8 relative cursor-pointer "
+             className= "bg-primary text-2xl text-secondary-2 font-bold py-2 px-10 rounded m-8 relative cursor-pointer "
              
               >
                 {" explore"}
