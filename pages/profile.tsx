@@ -1,28 +1,19 @@
-
-
-
-import { Layout } from '@components/common'
-import { useGetCustomerQuery} from '@framework/services/customer'
-
-
+import { Layout } from "@components/common";
+import { useGetCustomerQuery } from "@framework/services/customer";
 
 export async function getStaticProps() {
- 
-
   return {
-    props: { },
-  }
+    props: {},
+  };
 }
 
 export default function Profile() {
-
-  const {data }=useGetCustomerQuery();
+  const { data } = useGetCustomerQuery();
   return (
     <div className="mx-auto max-w-7xl px-6 w-full pt-4">
-     
-      <h1 className="pt-1 pb-4 text-2xl leading-7 font-bold tracking-wide" >
-      My Profile
-              </h1>
+      <h1 className="pt-1 pb-4 text-2xl leading-7 font-bold tracking-wide">
+        My Profile
+      </h1>
       <div className="grid grid-cols-4">
         {data && (
           <div className="flex flex-col divide-primary-2 divide-y">
@@ -44,7 +35,7 @@ export default function Profile() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
-Profile.Layout = Layout
+Profile.Layout = Layout;

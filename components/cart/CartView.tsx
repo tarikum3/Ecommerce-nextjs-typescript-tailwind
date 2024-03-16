@@ -11,7 +11,7 @@ import { useGetCartQuery } from '@framework/services/cart'
 import Clickoutside from '@components/common/Clickoutside'
 const CartView: FC = () => {
   
- // const { data, isLoading, isEmpty } = useCart()
+ 
      const {data,isLoading}  =useGetCartQuery();
      const [display, setDisplay] = useState(true);
   const { price: subTotal } = usePrice(

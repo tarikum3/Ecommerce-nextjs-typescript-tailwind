@@ -1,13 +1,13 @@
 
-import {  createApi } from '@reduxjs/toolkit/query/react'
+
 import { gql } from 'graphql-request'
-import {graphqlRequestBaseQuery} from '@rtk-query/graphql-request-base-query'
+
 import { getCheckoutQuery, checkoutLineItemAddMutation,checkoutCreateMutation,
     checkoutLineItemUpdateMutation,checkoutLineItemRemoveMutation} from '@framework/utils'
 import type { Mutation,CheckoutLineItemsAddPayload,MutationCheckoutLineItemsUpdateArgs,
     CheckoutCreatePayload } from '@framework/schemas/schema'
-import Cookies, { CookieAttributes } from 'js-cookie'
-import { API_TOKEN, API_URL,  SHOPIFY_CHECKOUT_ID_COOKIE,} from '@framework/const'
+import Cookies from 'js-cookie'
+import {   SHOPIFY_CHECKOUT_ID_COOKIE,} from '@framework/const'
   
 import { normalizeCart } from '@framework/utils/normalize'
 import { serviceApi } from './serviceApi';
@@ -103,6 +103,7 @@ type SelectedOption = {
         }),
     }),
   });
+
 
 
 

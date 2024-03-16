@@ -22,7 +22,7 @@ const CartItem = ({
   currencyCode,
   ...rest
 }: {
-  variant?: 'default' | 'display'
+
   item: LineItem
   currencyCode: string
 }) => {
@@ -98,7 +98,7 @@ const CartItem = ({
 
   return (
     <li
-      className={'flex flex-col py-4'+(removing ? 'opacity-50 pointer-events-none':'')}
+      className={`flex flex-col py-4 ${removing ? 'opacity-50 pointer-events-none':''}`}
       {...rest}
     >
       <div className="flex flex-row space-x-4 py-4">
