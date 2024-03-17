@@ -13,6 +13,6 @@ export const serviceApi = createApi({
             return headers
           },
       }),
-  tagTypes: ['Customer', 'Cart'],
+  tagTypes: ['Customer', 'Cart','Product'],
   endpoints: () => ({}),
 });
