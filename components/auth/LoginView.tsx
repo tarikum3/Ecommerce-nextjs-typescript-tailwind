@@ -38,7 +38,7 @@ const LoginView: React.FC = () => {
         password,
       })
 
-    // const data=  login({ email:"tarikum3@gmail.com", password:"9427230912" });
+    
    
       const accessToken = (data as any)?.data?.customerAccessToken?.accessToken
       const custError=(data as any)?.data?.customerUserErrors
