@@ -55,19 +55,24 @@ const CartItem = ({
       {...rest}
     >
       <div className="flex flex-row space-x-4 py-4">
-        <div className="w-16 h-16 bg-violet relative overflow-hidden cursor-pointer">
-          <Link href={`/product/${item.path}`}>
+        <Link href={`/product/${item.path}`}>
+          <div className="w-16 h-16 bg-violet relative overflow-hidden cursor-pointer">
             <Image
               //onClick={() => closeSidebarIfPresent()}
               // className={s.productImage}
-              className="w-full h-full object-cover"
-              width={64}
-              height={64}
+              // className="w-full h-full object-cover"
+              // width={64}
+              // height={64}
+              fill
+              //sizes="(min-width: 808px) 50vw, 100vw"
+              style={{
+                objectFit: "cover", // cover, contain, none
+              }}
               src={item.variant.image?.url || placeholderImg}
               alt={item.variant.image?.alt || "Product Image"}
             />
-          </Link>
-        </div>
+          </div>
+        </Link>
         <div className="flex-1 flex flex-col text-secondary">
           <Link href={`/product/${item.path}`}>
             <span

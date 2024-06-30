@@ -18,7 +18,7 @@ export const getHomeProducts = async () => {
 };
 
 //export const revalidate = 3600;
-export const dynamic = "force-dynamic";
+//export const dynamic = "force-dynamic";
 export default async function Home() {
   const productsPromise = await getHomeProducts();
 
@@ -47,14 +47,16 @@ export default async function Home() {
       </div>
 
       <div className=" m-10 ">
-        <p className="text-lg text-secondary font-bold m-5 mx-auto md:mx-24 md:text-xl lg:text-5xl ">
+        <p className="text-lg text-secondary font-bold m-5 mb-8 mx-auto md:mx-24 md:text-xl lg:text-5xl ">
           {" "}
           Explore Products{" "}
         </p>
 
-        <div className="grid grid-cols-1 gap-4 mx-auto md:mx-24 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 mx-auto md:mx-24 lg:grid-cols-3 ">
           {products.slice(0, 9).map((product: any, i: number) => (
-            <ProductCard key={product.id} product={product} />
+            <div className="h-[300px]">
+              <ProductCard key={product.id} product={product} />
+            </div>
           ))}
         </div>
 

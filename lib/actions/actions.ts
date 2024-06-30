@@ -49,7 +49,10 @@ export async function addItem(
   }
 
   try {
-    await addCartItem(cartId, { variantId: selectedVariantId });
+    console.log("selectedVariantId", selectedVariantId);
+    const res = await addCartItem(cartId, { variantId: selectedVariantId });
+    // console.log("selectedVariantIdcartId", cartId);
+    // console.log("selectedVariantIdcartIdres", res);
     revalidateTag(TAGS.cart);
   } catch (e) {
     return "Error adding item to cart";

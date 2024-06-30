@@ -195,7 +195,7 @@ export async function addCartItem(cartId: string, variables: CartItemBody) {
     },
     cache: "no-store",
   });
-
+  // console.log("checkoutLineItemsAddw", checkoutLineItemsAdd);
   return (
     checkoutLineItemsAdd?.checkout &&
     (normalizeCart(checkoutLineItemsAdd?.checkout) as any)

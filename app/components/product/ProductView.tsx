@@ -34,7 +34,7 @@ const ProductView: FC<ProductViewProps> = ({ product, relatedProducts }) => {
       //   productId: String(product.id),
       //   variantId: String(variant ? variant.id : product.variants[0]?.id),
       // });
-      await addItem(null, product.id);
+      await addItem(null, String(product.variants[0]?.id));
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -50,20 +50,25 @@ const ProductView: FC<ProductViewProps> = ({ product, relatedProducts }) => {
 
   return (
     <>
-      <div className="py-6 px-4 sm:p-6 md:py-10 md:px-8">
+      <div className="m-5 py-6 px-4 sm:p-6 md:py-10 md:px-8">
         <div className=" min-h-[500px]  mx-auto grid grid-cols-1  lg:gap-x-20 lg:grid-cols-2">
-          <div className="  col-start-1  row-start-1 sm:mb-6  lg:gap-6 lg:col-start-2 lg:row-end-6 lg:row-span-6 ">
+          <div className="  col-start-1  row-start-1 row-end-6 sm:mb-6  lg:gap-6 lg:col-start-2 lg:row-end-6 lg:row-span-6 ">
             {product?.images && (
-              <Image
-                quality="85"
-                src={product.images[0]?.url || placeholderImg}
-                alt={product.name || "Product Image"}
-                height={320}
-                width={320}
-                className={
-                  "w-full  object-cover rounded-lg  sm:col-span-2 lg:col-span-full"
-                }
-              />
+              <div className="relative h-full">
+                <Image
+                  quality="85"
+                  src={product.images[0]?.url || placeholderImg}
+                  alt={product.name || "Product Image"}
+                  // height={320}
+                  // width={320}
+                  fill
+                  //sizes="(min-width: 808px) 50vw, 100vw"
+                  style={{
+                    objectFit: "cover", // cover, contain, none
+                  }}
+                  // className={" rounded-lg  sm:col-span-2 lg:col-span-full"}
+                />
+              </div>
             )}
           </div>
 
@@ -88,18 +93,21 @@ const ProductView: FC<ProductViewProps> = ({ product, relatedProducts }) => {
               <Button
                 aria-label="Add to Cart"
                 type="button"
-                className={"w-5/6 py-2 px-6 rounded-lg"}
+                className={"w-5/6 py-4 px-5 rounded-lg text-sm"}
                 onClick={addToCart}
                 loading={loading}
                 disabled={variant?.availableForSale === false}
               >
-                {variant?.availableForSale === false
-                  ? "Not Available"
-                  : "Add To Cart"}
+                <span className={" text-xl"}>
+                  {" "}
+                  {variant?.availableForSale === false
+                    ? "Not Available"
+                    : "Add To Cart"}
+                </span>
               </Button>
             </div>
           </div>
-          <p className="mt-4 px-6  text-xl  col-start-1 sm:col-span-2 lg:mt-6 lg:row-start-4 lg:col-span-1 dark:text-slate-400">
+          <p className="mt-4 px-6  text-xl  col-start-1 sm:col-span-2 lg:mt-6 lg:row-start-4 lg:col-span-1 ">
             {product.description}
           </p>
         </div>

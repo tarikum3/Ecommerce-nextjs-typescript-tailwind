@@ -34,6 +34,7 @@ const CartView = ({ cart }: { cart: Cart | undefined }) => {
   //const checkoutUrl = Cookies.get(SHOPIFY_CHECKOUT_URL_COOKIE);
   // console.log("dropdown", dropdown);
   // console.log("dropdowndisplay", display);
+  console.log("cartttt", cart);
   return (
     <div className="relative ">
       <button onClick={() => handleDropdown("cart")} aria-label="Menu">

@@ -15,7 +15,7 @@ export default function Loading() {
             height={320}
             width={320}
             className={
-              "w-full  object-cover rounded-lg  sm:col-span-2 lg:col-span-full"
+              "  object-cover rounded-lg  sm:col-span-2 lg:col-span-full"
             }
           />
         </div>

@@ -33,16 +33,17 @@ export default function Loading({
           .fill(0)
           .map((_, index) => {
             return (
-              <Image
-                quality="85"
-                src={placeholderImg}
-                alt={"Product Image"}
-                width={540}
-                height={540}
-                className={
-                  "w-full  object-cover rounded-lg  sm:col-span-2 lg:col-span-full"
-                }
-              />
+              <></>
+              // <Image
+              //   quality="85"
+              //   src={placeholderImg}
+              //   alt={"Product Image"}
+              //   width={540}
+              //   height={540}
+              //   className={
+              //     " object-cover rounded-lg  sm:col-span-2 lg:col-span-full"
+              //   }
+              // />
             );
           })}
       </div>

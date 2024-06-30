@@ -74,7 +74,9 @@ export default async function Page({
 
       <div className="grid grid-cols-1 gap-4 mx-auto md:mx-24 lg:grid-cols-3">
         {products?.map((product: any, i: number) => (
-          <ProductCard key={product.id} product={product} />
+          <div className="h-[300px]">
+            <ProductCard key={product.id} product={product} />
+          </div>
         ))}
       </div>
     </>

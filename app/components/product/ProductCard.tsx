@@ -21,7 +21,7 @@ const ProductCard: FC<Props> = ({ product }) => {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="relative max-h-full w-full box-border overflow-hidden
+      className="relative h-full w-full box-border overflow-hidden
       bg-no-repeat bg-center bg-cover transition-transform
       ease-linear cursor-pointer inline-block bg-white"
       aria-label={product.name}
@@ -29,13 +29,18 @@ const ProductCard: FC<Props> = ({ product }) => {
       <>
         <div
           //className={s.imageContainer}
-          className="overflow-hidden rounded-[10px] w-full "
+          className="overflow-hidden rounded-[10px] w-full h-4/5  relative "
         >
           <Image
             alt={product.name || "Product Image"}
             src={product.images[0]?.url}
-            width={540}
-            height={540}
+            // width={540}
+            // height={540}
+            fill
+            //sizes="(min-width: 808px) 50vw, 100vw"
+            style={{
+              objectFit: "cover", // cover, contain, none
+            }}
             quality="85"
             // {...imgProps}
           />
