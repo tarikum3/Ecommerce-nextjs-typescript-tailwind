@@ -65,7 +65,7 @@ export default async function Home() {
             href="/search"
             className="flex flex-initial items-center justify-end font-bold    "
           >
-            <span className=" mr-2">more</span>
+            <span className=" mr-2 text-lg">more</span>
             <span className=" mr-2">
               <ArrowRight />
             </span>

@@ -9,6 +9,7 @@ import usePrice from "@lib/hooks/use-price";
 
 import { EditItemQuantityButton } from "./EditCart";
 import { DeleteItemButton } from "./DeleteButton";
+import { Button } from "@/app/components";
 type ItemOption = {
   name: string;
   nameId: number;
@@ -116,13 +117,15 @@ const CartItem = ({
       </div>
 
       <div className="flex flex-row h-9">
-        <button
+        <Button
+          variant="flat"
           //className={s.actions}
+
           className="flex p-1 border-primary-2 border items-center justify-center hover:bg-primary-2 disabled:cursor-not-allowed"
           // onClick={handleRemove}
         >
           <DeleteItemButton item={item} />
-        </button>
+        </Button>
         <label className="w-full border-primary-2 border ml-2">
           <input
             //className={s.input}
@@ -137,26 +140,30 @@ const CartItem = ({
             readOnly
           />
         </label>
-        <button
+        <Button
+          //className={s.actions}
+          variant="flat"
           type="button"
           // onClick={() => increaseQuantity(-1)}
           className="flex p-1 border-primary-2 border items-center justify-center hover:bg-primary-2 disabled:cursor-not-allowed"
           // className={s.actions}
-          style={{ marginLeft: "-1px" }}
+          // style={{ marginLeft: "-1px" }}
           disabled={quantity <= 1}
         >
           <EditItemQuantityButton item={item} type="minus" />
-        </button>
-        <button
+        </Button>
+        <Button
+          //className={s.actions}
+          variant="flat"
           type="button"
           // onClick={() => increaseQuantity(1)}
           className="flex p-1 border-primary-2 border items-center justify-center hover:bg-primary-2 disabled:cursor-not-allowed"
           // className={cn(s.actions)}
           style={{ marginLeft: "-1px" }}
-          disabled={quantity < 1 || quantity >= max}
+          // disabled={quantity < 1 || quantity >= max}
         >
           <EditItemQuantityButton item={item} type="plus" />
-        </button>
+        </Button>
       </div>
     </li>
   );

@@ -66,7 +66,7 @@ const ProductView: FC<ProductViewProps> = ({ product, relatedProducts }) => {
                   style={{
                     objectFit: "cover", // cover, contain, none
                   }}
-                  // className={" rounded-lg  sm:col-span-2 lg:col-span-full"}
+                  className={" rounded-lg  "}
                 />
               </div>
             )}

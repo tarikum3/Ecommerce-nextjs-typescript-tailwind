@@ -4,12 +4,13 @@ import { removeItem } from "@lib/actions/actions";
 import type { LineItem } from "@lib/types";
 
 import { useFormState, useFormStatus } from "react-dom";
-
+import { Button } from "@/app/components";
 function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <Button
+      variant="flat"
       type="submit"
       onClick={(e: React.FormEvent<HTMLButtonElement>) => {
         if (pending) e.preventDefault();
@@ -18,7 +19,7 @@ function SubmitButton() {
       aria-disabled={pending}
       className="flex p-1 border-primary-2 border items-center justify-center hover:bg-primary-2 disabled:cursor-not-allowed"
       // className={cn(s.actions)}
-    ></button>
+    ></Button>
   );
 }
 

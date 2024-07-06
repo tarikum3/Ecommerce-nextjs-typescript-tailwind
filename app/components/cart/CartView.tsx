@@ -8,6 +8,7 @@ import usePrice from "@lib/hooks/use-price";
 //import { useGetCartQuery } from "@framework/services/cart";
 import type { Cart } from "@lib/types";
 import Clickoutside from "@/app/components/common/Clickoutside";
+import { Button } from "@/app/components";
 const CartView = ({ cart }: { cart: Cart | undefined }) => {
   const [display, setDisplay] = useState(true);
   const [dropdown, setDropdown] = useState("");
@@ -37,31 +38,32 @@ const CartView = ({ cart }: { cart: Cart | undefined }) => {
   console.log("cartttt", cart);
   return (
     <div className="relative ">
-      <button onClick={() => handleDropdown("cart")} aria-label="Menu">
-        <Bag className="w-7 h-7" />
+      <Button
+        variant="flat"
+        onClick={() => handleDropdown("cart")}
+        aria-label="Menu"
+        className="  "
+      >
+        <Bag className="w-7 h-7  " />
         {cart && cart?.lineItems?.length > 0 && (
           <span className="min-w-[1.25rem] min-h-[1.25rem] border border-primary-2 bg-secondary text-primary absolute rounded-full right-3 top-3 font-bold text-xs">
             {cart?.lineItems?.length}
           </span>
         )}
-      </button>
+      </Button>
 
       {dropdown == "cart" && (
         <Clickoutside status={display} onClick={() => setDisplay(false)}>
           <div className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
-            <div className="absolute right-0 w-[80vw] md:w-[700px] h-screen bg-white rounded-md shadow-lg">
+            <div className="absolute right-0 w-[80vw] md:w-[700px] h-screen bg-primary rounded-md shadow-lg">
               {cart && cart?.lineItems?.length < 1 ? (
                 <div className="flex-1 px-4 flex flex-col justify-center items-center">
-                  <span className="border border-dashed border-primary rounded-full flex items-center justify-center w-16 h-16 p-12 bg-secondary text-secondary">
+                  <span className="border border-dashed border-primary rounded-full flex items-center justify-center w-16 h-16 p-12 bg-primary text-secondary">
                     <Bag className="absolute" />
                   </span>
                   <h2 className="pt-6 text-2xl font-bold tracking-wide text-center">
                     Your cart is empty
                   </h2>
-                  <p className="text-primary-3 px-10 text-center pt-2">
-                    Biscuit oat cake wafer icing ice cream tiramisu pudding
-                    cupcake.
-                  </p>
                 </div>
               ) : (
                 <>

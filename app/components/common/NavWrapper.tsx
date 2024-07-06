@@ -2,7 +2,7 @@
 import { FC, useState, useEffect } from "react";
 import Link from "next/link";
 
-import { Logo } from "@/app/components";
+import { Logo, Button } from "@/app/components";
 import { Searchbar } from "@/app/components/common";
 
 //import { useUI } from "@components/context";
@@ -20,7 +20,7 @@ import React from "react";
 
 // const Loading = () => (
 //   <div className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
-//     <div className="px-2 py-2 bg-white rounded-md shadow absolute right-0 ">
+//     <div className="px-2 py-2 bg-primary rounded-md shadow absolute right-0 ">
 //       {/* <LoadingDots /> */}
 //       Loading...
 //     </div>
@@ -151,14 +151,17 @@ const NavWrapper: FC<Props> = ({ children }) => {
           <Searchbar />
         </div>
         <div className="flex items-center justify-end sm:mr-10  flex-auto space-x-8">
-          <button
+          <Button
+            variant="flat"
+            //className={s.actions}
+
             className={`${searchExtend ? "hidden" : ""} sm:hidden`}
             onClick={() => {
               setSearchExtend(true);
             }}
           >
             <SearchIcon />
-          </button>
+          </Button>
           {children}
         </div>
       </div>

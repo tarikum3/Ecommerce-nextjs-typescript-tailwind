@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { logOut } from "@lib/actions/actions";
 // import { useRouter } from "next/router";
 import { useRouter } from "next/navigation";
+import { Button } from "@/app/components";
 const UserView: FC = () => {
   // const [logout] = useLogoutMutation();
 
@@ -30,10 +31,14 @@ const UserView: FC = () => {
   };
 
   console.log("dropdownsession", session);
+
+  console.log("dropdownsessionstatus", status);
+
   return (
     <>
       <div className="relative ">
-        <button
+        <Button
+          variant="flat"
           onClick={() => {
             handleDropdown("");
             // isCustomerLoggedIn ? handleDropdown("user") : openModal();
@@ -42,15 +47,15 @@ const UserView: FC = () => {
           aria-label="Menu"
         >
           <UserIcon className="w-7 h-7" />
-        </button>
+        </Button>
 
         {/* {dropdown == "user" && isCustomerLoggedIn && ( */}
         {dropdown == "user" && session?.user && (
           <Clickoutside status={display} onClick={() => setDisplay(false)}>
             <div className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
-              <div className="px-2 py-2 bg-white rounded-md shadow absolute right-0 ">
+              <div className="px-2 py-2 bg-primary rounded-md shadow absolute right-0 ">
                 <a
-                  className="block cursor-pointer px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                  className="block cursor-pointer px-4 py-3 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-primary focus:text-primary hover:bg-primary-3 focus:bg-primary-3 focus:outline-none focus:shadow-outline"
                   // onClick={async (e) => {
                   //   const { useRouter } = await import("next/router");
                   //   const router = useRouter();
@@ -62,28 +67,30 @@ const UserView: FC = () => {
                 </a>
 
                 <a
-                  className="block cursor-pointer px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                  className="block cursor-pointer px-4 py-3 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-primary focus:text-primary hover:bg-primary-3 focus:bg-primary-3 focus:outline-none focus:shadow-outline"
                   onClick={() => {
                     setTheme(theme === "dark" ? "light" : "dark");
                   }}
                 >
-                  <span className="flex">
-                    Theme:{" "}
+                  <span className="flex text-secondary space-x-2 ">
+                    <span>Theme: </span>
                     {theme == "dark" ? (
-                      <Moon className="w-2 h-2" />
+                      <Moon className="w-4 h-4" />
                     ) : (
-                      <Sun className="w-2 h-2" />
+                      <Sun className="w-4 h-4" />
                     )}
                   </span>
                 </a>
 
                 <a
-                  className="block cursor-pointer px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                  className="block cursor-pointer px-4 py-3 mt-2 text-sm font-semibold bg-transparent rounded-lg  md:mt-0 hover:text-primary focus:text-primary hover:bg-primary-3 focus:bg-primary-3 focus:outline-none focus:shadow-outline"
                   onClick={async () => {
                     // "use server";
                     // await logout();
                     // setCustomerToken(null);
                     await logOut();
+
+                    window.location.reload();
                   }}
                 >
                   Logout

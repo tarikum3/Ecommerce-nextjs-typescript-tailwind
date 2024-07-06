@@ -3,7 +3,7 @@ import { FC, useRef, useEffect, useCallback, ReactNode } from "react";
 //import s from './Modal.module.css'
 import { Cross } from "@/app/components/icons";
 import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
-
+import { Button } from "@/app/components";
 interface ModalProps {
   className?: string;
   children?: ReactNode;
@@ -53,13 +53,14 @@ const Modal: FC<ModalProps> = ({ children, onClose }) => {
         role="dialog"
         ref={ref}
       >
-        <button
+        <Button
+          variant="flat"
           onClick={() => onClose()}
           aria-label="Close panel"
           className="hover:text-primary-3 transition ease-in-out duration-150 focus:outline-none absolute right-0 top-0 m-6"
         >
           <Cross className="h-6 w-6" />
-        </button>
+        </Button>
 
         {children}
       </div>

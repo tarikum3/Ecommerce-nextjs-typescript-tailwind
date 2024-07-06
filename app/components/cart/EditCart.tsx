@@ -5,12 +5,13 @@ import { updateCartItem } from "@lib/actions/actions";
 import type { LineItem } from "@lib/types";
 
 import { useFormState, useFormStatus } from "react-dom";
-
+import { Button } from "@/app/components";
 function SubmitButton({ type }: { type: "plus" | "minus" }) {
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <Button
+      variant="flat"
       type="submit"
       onClick={(e: React.FormEvent<HTMLButtonElement>) => {
         if (pending) e.preventDefault();
@@ -27,7 +28,7 @@ function SubmitButton({ type }: { type: "plus" | "minus" }) {
       ) : (
         <Minus width={18} height={18} />
       )}
-    </button>
+    </Button>
   );
 }
 

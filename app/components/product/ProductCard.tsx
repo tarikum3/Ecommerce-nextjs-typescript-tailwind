@@ -23,7 +23,7 @@ const ProductCard: FC<Props> = ({ product }) => {
       href={`/product/${product.slug}`}
       className="relative h-full w-full box-border overflow-hidden
       bg-no-repeat bg-center bg-cover transition-transform
-      ease-linear cursor-pointer inline-block bg-white"
+      ease-linear cursor-pointer inline-block bg-primary"
       aria-label={product.name}
     >
       <>
