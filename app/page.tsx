@@ -9,7 +9,7 @@ import { ArrowRight } from "@/app/components/icons";
 import { promise } from "zod";
 //import { cache } from "react";
 ///
-export const getHomeProducts = async () => {
+const getHomeProducts = async () => {
   const productsPromise = getAllProducts({
     variables: { first: 8 },
     //cache: "no-store",
@@ -18,7 +18,7 @@ export const getHomeProducts = async () => {
 };
 
 //export const revalidate = 3600;
-//export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 export default async function Home() {
   const productsPromise = await getHomeProducts();
 
@@ -54,7 +54,7 @@ export default async function Home() {
 
         <div className="grid grid-cols-1 gap-4 mx-auto md:mx-24 lg:grid-cols-3 ">
           {products.slice(0, 9).map((product: any, i: number) => (
-            <div className="h-[300px]">
+            <div key={product.id} className="h-[300px]">
               <ProductCard key={product.id} product={product} />
             </div>
           ))}

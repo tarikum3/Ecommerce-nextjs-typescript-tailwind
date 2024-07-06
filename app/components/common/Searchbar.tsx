@@ -1,7 +1,7 @@
 "use client";
 import { FC, memo, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-
+import { Suspense } from "react";
 const Searchbar: FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,4 +57,13 @@ const Searchbar: FC = () => {
   );
 };
 
-export default memo(Searchbar);
+const Search = memo(Searchbar);
+//export default memo(Searchbar);
+export default function SearchbarWrapped() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <Search />
+    </Suspense>
+  );
+}

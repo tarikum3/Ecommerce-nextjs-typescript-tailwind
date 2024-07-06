@@ -1,5 +1,5 @@
 import { Footer } from "@/app/components/common";
-import Navbar from "@/app/components/common/NavbarNew";
+import Navbar from "@/app/components/common/Navbar";
 import ModalUI from "@/app/components/common/ModalUI";
 //import { Provider } from "react-redux";
 //import { store } from "@framework/store/store";

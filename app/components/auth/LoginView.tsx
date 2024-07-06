@@ -45,7 +45,6 @@ const LoginView: React.FC = () => {
         <LoginButton />
         <div className="pt-1 text-center text-sm">
           <span className="text-secondary-3">Don't have an account?</span>
-          {` `}
           <a
             className="text-secondary font-bold hover:underline cursor-pointer"
             onClick={() => setModalView("SIGNUP_VIEW")}

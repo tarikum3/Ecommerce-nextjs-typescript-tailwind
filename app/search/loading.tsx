@@ -17,7 +17,7 @@ export default function Loading({
             Showing results{" "}
             {query && (
               <>
-                for "<strong>{query}</strong>"
+                for '<strong>{query}</strong>'
               </>
             )}
           </span>

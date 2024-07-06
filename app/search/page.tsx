@@ -3,7 +3,7 @@ import { ProductCard } from "@/app/components/product";
 //import { unstable_noStore as noStore } from "next/cache";
 //import getAllProducts from "@lib/operations/getAllProducts";
 import { getAllProducts } from "@lib/services";
-export async function getSearchProducts(q: string) {
+async function getSearchProducts(q: string) {
   // noStore();
   let search = "";
 
@@ -56,13 +56,13 @@ export default async function Page({
             Showing {products?.length} results{" "}
             {q && (
               <>
-                for "<strong>{q}</strong>"
+                for '<strong>{q}</strong>'
               </>
             )}
           </span>
           <span className={found ? "hidden" : ""}>
             <>
-              There are no products that match "<strong>{q}</strong>"
+              There are no products that match '<strong>{q}</strong>'
             </>
           </span>
         </>
@@ -74,7 +74,7 @@ export default async function Page({
 
       <div className="grid grid-cols-1 gap-4 mx-auto md:mx-24 lg:grid-cols-3">
         {products?.map((product: any, i: number) => (
-          <div className="h-[300px]">
+          <div key={product.id} className="h-[300px]">
             <ProductCard key={product.id} product={product} />
           </div>
         ))}

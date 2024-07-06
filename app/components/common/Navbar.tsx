@@ -9,7 +9,7 @@ const Navbar: FC = () => {
   return (
     <NavWrapper>
       <Suspense
-      // fallback={<div className="text-red-300 font-bold">cartLOaing</div>}
+      //fallback={<div className="text-red-300 font-bold">cartLOaing</div>}
       >
         <CartWrapper />
       </Suspense>
@@ -18,9 +18,6 @@ const Navbar: FC = () => {
       >
         <UserView />
       </Suspense>
-
-      {/* <CartWrapper />
-      <UserView /> */}
     </NavWrapper>
   );
 };

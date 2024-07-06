@@ -13,7 +13,7 @@ import { getAllProducts, getProduct } from "@lib/services";
 // import getAllProductPaths from "@framework/operations/getAllProductPaths";
 //import { unstable_noStore as noStore } from "next/cache";
 
-export async function getProductPage(params: { slug: string }) {
+async function getProductPage(params: { slug: string }) {
   //noStore();
 
   const productPromise = getProduct({

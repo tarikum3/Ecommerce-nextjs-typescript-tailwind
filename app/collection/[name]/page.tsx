@@ -7,7 +7,7 @@ import { getCollectionProductsQuery, normalizeProduct } from "@lib/utils";
 
 import fetcher from "@lib/fetcher";
 
-export async function getCollection(params: { name: string }) {
+async function getCollection(params: { name: string }) {
   const categories = await getCategories();
   //console.log("pathtn",params!.name);
   const currentCategory = categories?.find(
@@ -55,7 +55,7 @@ export default async function Collection({
 
       <div className="grid grid-cols-1 gap-4 mx-24 lg:grid-cols-3">
         {products?.slice(0, 9).map((product: any, i: number) => (
-          <div className="h-[300px]">
+          <div key={product.id} className="h-[300px]">
             <ProductCard key={product.id} product={product} />
           </div>
         ))}

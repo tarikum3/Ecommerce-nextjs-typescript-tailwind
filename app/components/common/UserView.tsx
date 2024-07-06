@@ -13,6 +13,7 @@ import { logOut } from "@lib/actions/actions";
 import { useRouter } from "next/navigation";
 const UserView: FC = () => {
   // const [logout] = useLogoutMutation();
+
   const { theme, setTheme } = useTheme();
   const [display, setDisplay] = useState(true);
   const { openModal } = useUI();
