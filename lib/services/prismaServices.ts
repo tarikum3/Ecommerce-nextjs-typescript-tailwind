@@ -294,6 +294,7 @@ export async function fetchProductBySlug(slug: string) {
     where: { slug: slug },
     include: {
       images: true,
+      favoritedBy: true,
       variants: {
         include: {
           variantOptions: {
