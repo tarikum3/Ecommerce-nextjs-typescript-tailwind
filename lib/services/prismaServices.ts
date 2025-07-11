@@ -158,7 +158,7 @@ export async function fetchEventById(id: string) {
   return await prisma.eventLog.findUnique({
     where: { id },
     include: {
-      user: true, // Include the user relation if needed
+      user: true,
     },
   });
 }
