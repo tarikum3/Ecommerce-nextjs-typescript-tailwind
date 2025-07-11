@@ -289,7 +289,6 @@ export async function fetchProductById(id: string) {
 }
 
 export async function fetchProductBySlug(slug: string) {
-  //console.log("slug", slug);
   const product = await prisma.product.findFirst({
     where: { slug: slug },
     include: {
