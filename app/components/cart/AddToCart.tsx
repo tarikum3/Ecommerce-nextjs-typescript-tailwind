@@ -49,9 +49,11 @@ import { Button, ErrorMessage } from "@/app/components";
 export function AddToCart({
   variants,
   availableForSale,
+  className,
 }: {
   variants: ProductVariant[];
   availableForSale: boolean;
+  className?: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -77,6 +79,7 @@ export function AddToCart({
       disabled={isPending || !availableForSale || !selectedVariantId}
       title={title}
       loading={isPending}
+      className={className}
       onClick={() => {
         // Safeguard in case someone messes with `disabled` in devtools.
         if (!availableForSale || !selectedVariantId) return;

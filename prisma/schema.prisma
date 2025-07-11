@@ -60,6 +60,9 @@ model User {
   EventLog      EventLog[]
   sessions      Session[]
   userNotifications UserNotification[]
+  roleId        String?    
+  role          Role?      @relation(fields: [roleId], references: [id]) 
+  favoriteProducts FavoriteProduct[]
   @@index([email])
 }
 
@@ -122,7 +125,7 @@ model AdminUser {
   imageId   String?
   image     Image?   @relation(fields: [imageId], references: [id])
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  roles     Role[]   @relation("AdminUserRoles")
   @@index([userId])
   @@index([email])
   @@index([phone])
@@ -146,6 +149,7 @@ model Product {
   price            ProductPrice?
   variants         ProductVariant[]
 
+favoritedBy FavoriteProduct[]
   @@index([slug])
   @@index([vendor])
 }
@@ -215,7 +219,20 @@ model ProductPrice {
 
   @@index([productId])
 }
+model FavoriteProduct {
+  id         String   @id @default(uuid())
+  userId     String
+  productId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
+  user       User     @relation(fields: [userId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+}
 model Image {
   id        String      @id @default(uuid())
   url       String
@@ -293,7 +310,7 @@ model Cart {
   customerId         String?
   Customer           Customer?  @relation(fields: [customerId], references: [id])
   items              CartItem[]
-
+  Order      Order?
   @@index([userId])
 }
 
@@ -339,7 +356,8 @@ model Order {
   customerId         String?
   Customer           Customer?   @relation(fields: [customerId], references: [id])
   items              OrderItem[]
-
+   cartId            String    @unique
+  Cart              Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
   @@index([userId])
 }
 
@@ -435,6 +453,26 @@ model UserNotification {
   @@index([notificationId])
 }
 
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  adminUsers  AdminUser[]  @relation("AdminUserRoles")
+  resources   Resource[]   @relation("RoleResources")
+  users       User[] 
+    createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Resource {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  roles       Role[]       @relation("RoleResources")
+    createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
 
 
 

@@ -33,6 +33,7 @@ export type Product = Prisma.ProductGetPayload<{
       };
     };
     price: true;
+    favoritedBy: true;
     options: {
       include: {
         values: { include: { option: true } };

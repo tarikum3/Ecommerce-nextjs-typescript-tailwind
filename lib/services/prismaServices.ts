@@ -1,11 +1,5 @@
-import prisma, {
-  Product,
-  Collection,
-  EventLog,
-  Order,
-  OrderStatus,
-} from "@lib/prisma";
-import { Prisma } from "@prisma/client";
+import prisma, { Product, Collection, EventLog, Order } from "@lib/prisma";
+import { Prisma, OrderStatus } from "@prisma/client";
 import { applyCollectionRules, convertToSlug, dateSchema } from "@/lib/helper";
 import { supabase } from "@lib/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
@@ -81,85 +75,85 @@ export interface FetchEventsOptions {
   };
 }
 
-export async function fetchEvents(
-  options: FetchEventsOptions
-): Promise<{ events: EventLog[]; total: number }> {
-  const { searchKey, filter, pagination, sort } = options;
+// export async function fetchEvents(
+//   options: FetchEventsOptions
+// ): Promise<{ events: EventLog[]; total: number }> {
+//   const { searchKey, filter, pagination, sort } = options;
 
-  try {
-    const whereClause: any = {};
+//   try {
+//     const whereClause: any = {};
 
-    // Handle searchKey
-    if (searchKey) {
-      whereClause.OR = [
-        { resourceName: { contains: searchKey, mode: "insensitive" } },
-        { action: { contains: searchKey, mode: "insensitive" } },
-      ];
-    }
+//     // Handle searchKey
+//     if (searchKey) {
+//       whereClause.OR = [
+//         { resourceName: { contains: searchKey, mode: "insensitive" } },
+//         { action: { contains: searchKey, mode: "insensitive" } },
+//       ];
+//     }
 
-    // Handle filter
-    if (filter) {
-      if (filter.resourceName) {
-        whereClause.resourceName = filter.resourceName;
-      }
+//     // Handle filter
+//     if (filter) {
+//       if (filter.resourceName) {
+//         whereClause.resourceName = filter.resourceName;
+//       }
 
-      if (filter.action) {
-        whereClause.action = filter.action;
-      }
+//       if (filter.action) {
+//         whereClause.action = filter.action;
+//       }
 
-      if (filter.startDate) {
-        whereClause.createdAt = { gte: filter.startDate };
-      }
+//       if (filter.startDate) {
+//         whereClause.createdAt = { gte: filter.startDate };
+//       }
 
-      if (filter.endDate) {
-        whereClause.createdAt = whereClause.createdAt
-          ? { ...whereClause.createdAt, lte: filter.endDate }
-          : { lte: filter.endDate };
-      }
-    }
+//       if (filter.endDate) {
+//         whereClause.createdAt = whereClause.createdAt
+//           ? { ...whereClause.createdAt, lte: filter.endDate }
+//           : { lte: filter.endDate };
+//       }
+//     }
 
-    const orderBy = sort
-      ? {
-          [sort.field]: sort.order,
-        }
-      : { createdAt: "desc" as const };
+//     const orderBy = sort
+//       ? {
+//           [sort.field]: sort.order,
+//         }
+//       : { createdAt: "desc" as const };
 
-    // Handle pagination
-    let events: EventLog[];
-    const total = await prisma.eventLog.count({ where: whereClause });
+//     // Handle pagination
+//     let events: EventLog[];
+//     const total = await prisma.eventLog.count({ where: whereClause });
 
-    if (pagination) {
-      const page = pagination.page ?? 1;
-      const pageSize = pagination.pageSize ?? 10;
-      const skip = (page - 1) * pageSize;
-      const take = pageSize;
+//     if (pagination) {
+//       const page = pagination.page ?? 1;
+//       const pageSize = pagination.pageSize ?? 10;
+//       const skip = (page - 1) * pageSize;
+//       const take = pageSize;
 
-      events = await prisma.eventLog.findMany({
-        where: whereClause,
-        skip,
-        take,
-        orderBy: orderBy,
-        include: {
-          user: true,
-        },
-      });
-    } else {
-      // If no pagination is provided, fetch all events
-      events = await prisma.eventLog.findMany({
-        where: whereClause,
-        orderBy: orderBy,
-        include: {
-          user: true,
-        },
-      });
-    }
+//       events = await prisma.eventLog.findMany({
+//         where: whereClause,
+//         skip,
+//         take,
+//         orderBy: orderBy,
+//         include: {
+//           user: true,
+//         },
+//       });
+//     } else {
+//       // If no pagination is provided, fetch all events
+//       events = await prisma.eventLog.findMany({
+//         where: whereClause,
+//         orderBy: orderBy,
+//         include: {
+//           user: true,
+//         },
+//       });
+//     }
 
-    return { events, total };
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    throw new Error("Unable to fetch events.");
-  }
-}
+//     return { events, total };
+//   } catch (error) {
+//     console.error("Error fetching events:", error);
+//     throw new Error("Unable to fetch events.");
+//   }
+// }
 export async function fetchEventById(id: string) {
   return await prisma.eventLog.findUnique({
     where: { id },
@@ -173,27 +167,11 @@ export async function fetchProducts(
   options: FetchProductsOptions
 ): Promise<{ products: Product[]; total: number }> {
   const { searchKey, filter, pagination, sort } = options;
-
+  await checkmain(
+    "20250623172906_20250623171808_favorite_again",
+    "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  );
   try {
-    // const image = "t-shirt-1.png";
-    // const imagePath = path.resolve("./public/assets", image);
-    // console.log("imagePath", imagePath);
-    // const imageBuffer = fs.readFileSync(imagePath);
-    // const { data, error } = await supabase.storage
-    //   .from("images")
-    //   .upload(`public/${uuidv4()}-${image}`, imageBuffer);
-
-    // if (error) {
-    //   console.error("Error uploading image:", error);
-
-    //   throw new Error("Error uploading image.");
-    // }
-    // console.log("imagePathdata", data);
-    // const imageUrl = `${
-    //   supabase.storage.from("images").getPublicUrl(data.path).data.publicUrl
-    // }`;
-    // console.log("imageUrlimageUrl", imageUrl);
-    //await checkmain();
     const whereClause: any = {};
 
     if (searchKey) {
@@ -250,6 +228,7 @@ export async function fetchProducts(
               },
             },
           },
+          favoritedBy: true,
           price: true,
           options: { include: { values: true } },
         },
@@ -268,6 +247,7 @@ export async function fetchProducts(
               },
             },
           },
+          favoritedBy: true,
           price: true,
           options: {
             include: {
@@ -297,6 +277,7 @@ export async function fetchProductById(id: string) {
           },
         },
       },
+      favoritedBy: true,
       price: true,
       options: {
         include: {
@@ -503,6 +484,7 @@ export async function fetchCollections() {
                   },
                 },
               },
+              favoritedBy: true,
               price: true,
               options: {
                 include: {
@@ -720,6 +702,7 @@ export async function fetchCollection(
                     },
                   },
                 },
+                favoritedBy: true,
                 price: true,
                 options: { include: { values: true } },
               },
@@ -1106,7 +1089,7 @@ export async function placeOrder(cartId: string) {
     // Fetch Cart and Items
     const cart = await tx.cart.findUnique({
       where: { id: cartId },
-      include: { items: { include: { variant: true } } },
+      include: { items: { include: { variant: true } }, Order: true },
     });
 
     if (!cart || cart.items.length === 0) {
@@ -1124,54 +1107,121 @@ export async function placeOrder(cartId: string) {
     let cartC = addComputedCartPrices(cart);
     // Create Order
 
-    const cc = await tx.customer.update({
-      where: { userId: userId },
-      data: {
-        totalOrders: { increment: 1 },
-        totalSpent: { increment: cartC.totalPrice },
-        lastOrderDate: new Date(),
-      },
-    });
-
-    const order = await tx.order.create({
-      data: {
-        userId: cartC.userId,
-        firstName: cartC.firstName,
-        lastName: cartC.lastName,
-        email: cartC.email,
-        phone: cartC.phone,
-        companyName: cartC.companyName,
-        address: cartC.address,
-        city: cartC.city,
-        country: cartC.country,
-        postalCode: cartC.postalCode,
-        billingName: cartC.billingName,
-        billingEmail: cartC.billingEmail,
-        billingCompanyName: cartC.billingCompanyName,
-        billingAddress: cartC.billingAddress,
-        paymentMethod: cartC.paymentMethod,
-        deliveryMethod: cartC.deliveryMethod,
-        currency: cartC.currency,
-        subtotalPrice: cartC.subtotalPrice,
-        totalPrice: cartC.totalPrice,
-        status: "PENDING",
-        items: {
-          create: cart.items.map((cartItem) => ({
-            variantId: cartItem.variantId,
-            quantity: cartItem.quantity,
-          })),
+    // const cc = await tx.customer.update({
+    //   where: { userId: userId },
+    //   data: {
+    //     totalOrders: { increment: 1 },
+    //     totalSpent: { increment: cartC.totalPrice },
+    //     lastOrderDate: new Date(),
+    //   },
+    // });
+    if (!cart.Order) {
+      const order = await tx.order.create({
+        data: {
+          userId: cartC.userId,
+          firstName: cartC.firstName,
+          lastName: cartC.lastName,
+          email: cartC.email,
+          phone: cartC.phone,
+          companyName: cartC.companyName,
+          address: cartC.address,
+          city: cartC.city,
+          country: cartC.country,
+          postalCode: cartC.postalCode,
+          billingName: cartC.billingName,
+          billingEmail: cartC.billingEmail,
+          billingCompanyName: cartC.billingCompanyName,
+          billingAddress: cartC.billingAddress,
+          paymentMethod: cartC.paymentMethod,
+          deliveryMethod: cartC.deliveryMethod,
+          currency: cartC.currency,
+          subtotalPrice: cartC.subtotalPrice,
+          totalPrice: cartC.totalPrice,
+          status: "PENDING",
+          items: {
+            create: cart.items.map((cartItem) => ({
+              variantId: cartItem.variantId,
+              quantity: cartItem.quantity,
+            })),
+          },
+          cartId: cartC.id,
         },
-      },
-      include: { items: true },
-    });
-
+        include: { items: true },
+      });
+      return order;
+    } else {
+      const order = await tx.order.update({
+        where: { id: cart.Order.id },
+        data: {
+          userId: cartC.userId,
+          firstName: cartC.firstName,
+          lastName: cartC.lastName,
+          email: cartC.email,
+          phone: cartC.phone,
+          companyName: cartC.companyName,
+          address: cartC.address,
+          city: cartC.city,
+          country: cartC.country,
+          postalCode: cartC.postalCode,
+          billingName: cartC.billingName,
+          billingEmail: cartC.billingEmail,
+          billingCompanyName: cartC.billingCompanyName,
+          billingAddress: cartC.billingAddress,
+          paymentMethod: cartC.paymentMethod,
+          deliveryMethod: cartC.deliveryMethod,
+          currency: cartC.currency,
+          subtotalPrice: cartC.subtotalPrice,
+          totalPrice: cartC.totalPrice,
+          status: "PENDING",
+          items: {
+            create: cart.items.map((cartItem) => ({
+              variantId: cartItem.variantId,
+              quantity: cartItem.quantity,
+            })),
+          },
+          cartId: cartC.id,
+        },
+        include: { items: true },
+      });
+      return order;
+      //return cart.Order;
+    }
     // Clear Cart After Order is Placed
     // await tx.cartItem.deleteMany({ where: { cartId } });
 
-    return order;
+    //  return order;
   });
 }
 
+export async function updateOrderStatus(cartId: string, status: OrderStatus) {
+  try {
+    const cart = await prisma.cart.findUnique({
+      where: { id: cartId },
+      include: {
+        Order: true,
+      },
+    });
+
+    if (!cart) {
+      throw new Error("Cart not found.");
+    }
+    if (!cart.Order) {
+      throw new Error("Order not found.");
+    } else {
+      const order = await prisma.order.update({
+        where: { id: cart.Order.id },
+        data: {
+          status: status,
+        },
+      });
+      return order;
+    }
+    // return cart;
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    throw new Error("Unable to fetch order.");
+  }
+}
 export async function getDailyNewCustomers(
   startDateStr: string,
   endDateStr: string
@@ -1824,20 +1874,51 @@ export async function updateSingleUserNotification(
   }
 }
 
-async function checkmain() {
+export async function createFavorite(userId: string, productId: string) {
+  try {
+    const newFavorite = await prisma.favoriteProduct.create({
+      data: {
+        userId,
+        productId,
+      },
+    });
+    return newFavorite;
+  } catch (error) {
+    console.error("Error creating favorite:", error);
+    throw new Error("Unable to add product to favorites.");
+  }
+}
+
+export async function removeFavorite(userId: string, productId: string) {
+  try {
+    const deletedFavorite = await prisma.favoriteProduct.delete({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+    return deletedFavorite;
+  } catch (error) {
+    console.error("Error removing favorite:", error);
+    throw new Error("Unable to remove product from favorites.");
+  }
+}
+export async function checkmain(migration_name: string, checksum: string) {
   // First, execute the SELECT query
   const selectResult = await prisma.$queryRaw`
     SELECT "id", "migration_name", "checksum"
     FROM "_prisma_migrations"
-    WHERE "migration_name" = '20250219182035_new'
+    WHERE "migration_name" = ${migration_name}
   `;
-  console.log("Before Updateeee:", selectResult);
+  console.log("Before Update:", selectResult);
 
   // Now, execute the UPDATE query
   const updateResult = await prisma.$executeRaw`
     UPDATE "_prisma_migrations"
-    SET "checksum" = '01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b'
-    WHERE "migration_name" = '20250219182035_new'
+    SET "checksum" = ${checksum}
+    WHERE "migration_name" = ${migration_name}
   `;
   console.log("Update Result:", updateResult);
 }

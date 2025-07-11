@@ -10,10 +10,13 @@ import {
   updateCart,
   createUser,
   placeOrder,
+  updateOrderStatus,
   createCustomer,
   createAdminUser,
   createNotificationForAllUsers,
   NotificationType,
+  createFavorite,
+  removeFavorite,
 } from "@lib/services/prismaServices";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -23,6 +26,8 @@ import { z } from "zod";
 import { unstable_cache } from "next/cache";
 import { addComputedCartPrices } from "@/lib/helper";
 import { redirect, RedirectType } from "next/navigation";
+import { stripe } from "@/lib/stripe";
+import { OrderStatus } from "@prisma/client";
 
 export async function getCartByIdUtil() {
   const cartId = cookies().get("cartId")?.value;
@@ -34,6 +39,72 @@ export async function getCartByIdUtil() {
   return cart;
 }
 
+export async function createPaymentIntent() {
+  const cart = await getCartByIdUtil();
+
+  if (!cart) {
+    throw new Error("Cart not found");
+  }
+
+  if (!cart.items || cart.items.length === 0) {
+    throw new Error("Cart is empty");
+  }
+
+  // Calculate total amount
+  const totalAmount = cart.items.reduce(
+    (total: any, item: any) => total + item.variant.price * item.quantity,
+    0
+  );
+
+  // Create PaymentIntent
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: Math.round(totalAmount * 100), // Convert to cents
+    currency: cart.currency || "usd",
+    metadata: {
+      cartId: cart.id,
+      userId: cart.userId,
+      items: JSON.stringify(
+        cart.items.map((item: any) => ({
+          productId: item.variant.productId,
+          variantId: item.variantId,
+          quantity: item.quantity,
+          price: item.variant.price,
+        }))
+      ),
+    },
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  if (!paymentIntent.client_secret) {
+    throw new Error("Failed to create payment intent");
+  }
+
+  return {
+    clientSecret: paymentIntent.client_secret,
+    totalAmount,
+  };
+}
+
+export async function completeOrder() {
+  const cartId = cookies().get("cartId")?.value;
+  let order;
+
+  if (cartId) {
+    order = await updateOrderStatus(cartId, OrderStatus.COMPLETED);
+  }
+  return order;
+}
+export async function cancelOrder() {
+  const cartId = cookies().get("cartId")?.value;
+  let order;
+
+  if (cartId) {
+    order = await updateOrderStatus(cartId, OrderStatus.CANCELED);
+  }
+  return order;
+}
 export async function placeOrderUtil() {
   const cartId = cookies().get("cartId")?.value;
   let order;
@@ -411,4 +482,88 @@ export async function logOut() {
     throw error;
   }
   redirect("/?refresh=true", RedirectType.replace);
+}
+
+// export async function addToFavourite(
+//   prevState: any,
+//   productId: string
+// ) {
+//   const session = await auth();
+//   const userId = session?.user?.id;
+
+//   if (!userId) {
+//     return "User not authenticated";
+//   }
+
+//   if (!productId) {
+//     return "Missing product ID";
+//   }
+
+//   try {
+//     // Use your existing createFavorite function
+//     await createFavorite(userId, productId);
+
+//     revalidateTag(TAGS.products);
+//     return "Product added to favorites";
+//   } catch (e) {
+//     console.error("Error adding to favorites:", e);
+//     return "Error adding product to favorites";
+//   }
+// }
+
+// export async function removeFromFavourite(
+//   prevState: any,
+//   productId: string
+// ) {
+//   const session = await auth();
+//   const userId = session?.user?.id;
+
+//   if (!userId) {
+//     return "User not authenticated";
+//   }
+
+//   if (!productId) {
+//     return "Missing product ID";
+//   }
+
+//   try {
+//     // Use your existing removeFavorite function
+//     await removeFavorite(userId, productId);
+
+//     revalidateTag(TAGS.products);
+//     return "Product removed from favorites";
+//   } catch (e) {
+//     console.error("Error removing from favorites:", e);
+//     return "Error removing product from favorites";
+//   }
+// }
+
+// Bonus: Combined toggle function
+export async function toggleFavourite(
+  prevState: any,
+  {
+    productId,
+    isCurrentlyFavorited,
+  }: { productId: string; isCurrentlyFavorited: boolean }
+) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) return "User not authenticated";
+  if (!productId) return "Missing product ID";
+
+  try {
+    if (isCurrentlyFavorited) {
+      await removeFavorite(userId, productId);
+      revalidateTag(TAGS.products);
+      return "Product removed from favorites";
+    } else {
+      await createFavorite(userId, productId);
+      revalidateTag(TAGS.products);
+      return "Product added to favorites";
+    }
+  } catch (e) {
+    console.error("Error toggling favorite:", e);
+    return "Error updating favorites";
+  }
 }

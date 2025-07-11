@@ -1,5 +1,5 @@
-import createNextIntlPlugin from 'next-intl/plugin';
- 
+import createNextIntlPlugin from "next-intl/plugin";
+
 const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -16,6 +16,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "qvkdnhfbjppmzromhdae.supabase.co",
         pathname: "/storage/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
       },
     ],
   },

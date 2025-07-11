@@ -2,6 +2,8 @@ import { ProductCard } from "@/app/components/product";
 import { unstable_noStore as noStore } from "next/cache";
 
 import { fetchProducts, productSortField } from "@lib/services/prismaServices";
+import SortList from "@/app/components/common/filter/SortList";
+import { sorting } from "lib/const";
 export const dynamic = "force-dynamic";
 async function getSearchProducts({
   q,
@@ -49,30 +51,32 @@ export default async function Page({
   });
 
   return (
-    <div className="relative flex flex-col py-16 px-8 gap-3">
-      <div className=" text-xl mx-auto ">
-        {q && found ? (
-          <span className="text-primary-700">
-            Showing {products?.length} results{" "}
-            {q && (
-              <strong>
-                for "<span className="font-semibold">{q}</span>"
-              </strong>
-            )}
-          </span>
-        ) : (
-          q && (
-            <span>
-              There are no products that match{" "}
-              <strong>
-                "<span className="font-semibold">{q}</span>"
-              </strong>
+    <div className="py-16 max-w-7xl mx-auto px-6 ">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div className=" text-xl ">
+          {q && found ? (
+            <span className="text-primary-700">
+              Showing {products?.length} results{" "}
+              {q && (
+                <strong>
+                  for "<span className="font-semibold">{q}</span>"
+                </strong>
+              )}
             </span>
-          )
-        )}
+          ) : (
+            q && (
+              <span>
+                There are no products that match{" "}
+                <strong>
+                  "<span className="font-semibold">{q}</span>"
+                </strong>
+              </span>
+            )
+          )}
+        </div>
+        <SortList list={sorting} title="Sort by" />
       </div>
-
-      <div className="grid grid-cols-1 gap-8 mx-auto  lg:grid-cols-3 border">
+      <div className="mb-2 grid grid-cols-1 gap-8 mx-auto  lg:grid-cols-3">
         {products?.map((product: any) => (
           <ProductCard key={product.id} product={product} />
         ))}
@@ -80,4 +84,3 @@ export default async function Page({
     </div>
   );
 }
-
