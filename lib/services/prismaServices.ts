@@ -158,7 +158,7 @@ export async function fetchEventById(id: string) {
   return await prisma.eventLog.findUnique({
     where: { id },
     include: {
-      user: true, // Include the user relation if needed
+      user: true,
     },
   });
 }
@@ -167,10 +167,10 @@ export async function fetchProducts(
   options: FetchProductsOptions
 ): Promise<{ products: Product[]; total: number }> {
   const { searchKey, filter, pagination, sort } = options;
-  await checkmain(
-    "20250623172906_20250623171808_favorite_again",
-    "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
-  );
+  // await checkmain(
+  //   "20250710150237_20250710143931_checkout_again",
+  //   "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+  // );
   try {
     const whereClause: any = {};
 
@@ -289,11 +289,11 @@ export async function fetchProductById(id: string) {
 }
 
 export async function fetchProductBySlug(slug: string) {
-  //console.log("slug", slug);
   const product = await prisma.product.findFirst({
     where: { slug: slug },
     include: {
       images: true,
+      favoritedBy: true,
       variants: {
         include: {
           variantOptions: {
