@@ -1,16 +1,29 @@
 import prisma, { Product, Collection } from "@lib/prisma";
 import { TAGS } from "@lib/const";
-import { getCartItem, getCartByIdUtil,deleteCookies } from "@lib/actions/actions";
-export { getCartItem, getCartByIdUtil ,deleteCookies};
+import {
+  getCartItem,
+  getCartByIdUtil,
+  deleteCookies,
+  placeOrderUtil,
+} from "@lib/actions/actions";
+
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { twMerge } from 'tailwind-merge';
-import clsx, { ClassValue } from 'clsx';
+import { twMerge } from "tailwind-merge";
+import clsx, { ClassValue } from "clsx";
+import { z } from "zod";
+
+export { getCartItem, getCartByIdUtil, deleteCookies, placeOrderUtil };
 interface Rule {
   field: string;
   condition: string;
   value: string;
 }
 //export type ProductFields = keyof Product extends string ? keyof Product : never;
+export const dateSchema = z
+  .string()
+  .refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format",
+  });
 
 export type ProductFields = keyof Product;
 function isValidField(field: string): field is ProductFields {
@@ -38,7 +51,7 @@ export async function applyCollectionRules(collectionId: string) {
   const products = await prisma.product.findMany();
 
   const matchingProducts = products.filter((product: any) => {
-    return collection.rules.some((rule:any) => {
+    return collection.rules.some((rule: any) => {
       if (!isValidField(rule.field)) {
         console.warn(`Field ${rule.field} is not valid on the product.`);
         return false;
@@ -69,13 +82,12 @@ export async function applyCollectionRules(collectionId: string) {
   });
 
   await prisma.productCollection.createMany({
-    data: matchingProducts.map((product:any) => ({
+    data: matchingProducts.map((product: any) => ({
       productId: product.id,
       collectionId,
     })),
   });
 }
-
 
 export function addComputedCartPrices(cart: any) {
   const subtotalPrice = cart?.items?.reduce((total: any, item: any) => {
@@ -143,10 +155,6 @@ export const createUrl = (
 
   return `${pathname}${queryString}`;
 };
-
-
-
-
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));

@@ -33,6 +33,7 @@ export type Product = Prisma.ProductGetPayload<{
       };
     };
     price: true;
+    favoritedBy: true;
     options: {
       include: {
         values: { include: { option: true } };
@@ -40,6 +41,15 @@ export type Product = Prisma.ProductGetPayload<{
     };
   };
 }>;
+export type OrderStatus = Prisma.EnumOrderStatusFieldUpdateOperationsInput;
+
+export type Order = Prisma.OrderGetPayload<{
+  include: {
+    items: true;
+    Customer: true;
+  };
+}>;
+
 export type ProductVariant = Prisma.ProductVariantGetPayload<{
   include: {
     variantOptions: { include: { optionValue: { include: { option: true } } } };
@@ -56,3 +66,8 @@ export type Cart = Prisma.CartGetPayload<{
   };
 }>;
 export type Collection = PrismaCollection;
+export type EventLog = Prisma.EventLogGetPayload<{
+  include: {
+    user: true; // Including the user relation in the EventLog
+  };
+}>;

@@ -3,8 +3,20 @@ import React from "react";
 import { Cart } from "@lib/prisma";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/components";
+import { getStripe } from "@/lib/stripe";
 const Summary = ({ cart }: { cart: Cart | undefined }) => {
   const router = useRouter();
+  const stripePromise = getStripe();
+  const handleCheckout = async () => {
+    const stripe = await stripePromise;
+    const response = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // body: JSON.stringify({ items: cart }),
+    });
+    const { sessionId } = await response.json();
+    stripe?.redirectToCheckout({ sessionId });
+  };
   return (
     // <div className="min-w-80 w-1  space-y-8 m-3 p-4 border">
     <div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:max-w-xs xl:max-w-md">
@@ -33,18 +45,12 @@ const Summary = ({ cart }: { cart: Cart | undefined }) => {
           </dl>
 
           <dl className="flex items-center justify-between gap-4 py-3">
-            <dt className="text-base font-normal text-primary-900 ">
-              Tax
-            </dt>
-            <dd className="text-base font-medium text-primary-900 ">
-              15%
-            </dd>
+            <dt className="text-base font-normal text-primary-900 ">Tax</dt>
+            <dd className="text-base font-medium text-primary-900 ">15%</dd>
           </dl>
 
           <dl className="flex items-center justify-between gap-4 py-3">
-            <dt className="text-base font-bold text-primary-900 ">
-              Total
-            </dt>
+            <dt className="text-base font-bold text-primary-900 ">Total</dt>
             <dd className="text-base font-bold text-primary-900 ">
               {cart?.totalPrice}
             </dd>
@@ -56,7 +62,8 @@ const Summary = ({ cart }: { cart: Cart | undefined }) => {
         <Button
           // className={s.link}
           disabled={cart?.step != "payment"}
-          onClick={() => router.push("/payment")}
+          // onClick={() => router.push("/payment")}
+          onClick={handleCheckout}
           className=" rounded-md inline-flex items-center justify-center w-full  text-primary-100 p-5 text-sm"
         >
           {" Proceed to Payment"}

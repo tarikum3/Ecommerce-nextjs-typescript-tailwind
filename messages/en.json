@@ -1,0 +1,19 @@
+{
+  "LocaleSwitcher": {
+    "am": "Amharic",
+    "en": "English",
+    "label": "Language"
+  },
+  "SideBar": {
+    "dashboard": {
+      "label": "Dashboard",
+      "overview": "Overview",
+      "analytics": "Analytics"
+    },
+    "users": "Users",
+    "products": "Products",
+    "orders": "Orders",
+    "customers": "Customers",
+    "activities": "Activities"
+  }
+}

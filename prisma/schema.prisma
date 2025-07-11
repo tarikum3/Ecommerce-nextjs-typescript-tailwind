@@ -1,229 +1,19 @@
-// generator client {
-//   provider = "prisma-client-js"
-// }
- 
-// datasource db {
-//   provider = "postgresql"
-//   // Uses connection pooling
-//   url = env("POSTGRES_PRISMA_URL")
-//   // Uses direct connection, ⚠️ make sure to keep this to `POSTGRES_URL_NON_POOLING`
-//   // or you'll have dangling databases from migrations
-//   directUrl = env("POSTGRES_URL_NON_POOLING")
-// }
- 
-
-
-
-// model Account {
-//   id                 String  @id @default(cuid())
-//   userId             String  @map("user_id")
-//   type               String
-//   provider           String
-//   providerAccountId  String  @map("provider_account_id")
-//   refresh_token      String?
-//   access_token       String?
-//   expires_at         Int?
-//   token_type         String?
-//   scope              String?
-//   id_token           String?
-//   session_state      String?
-//   oauth_token_secret String?
-//   oauth_token        String?
-
-//   user User @relation(fields:[userId], references:[id], onDelete: Cascade)
-
-//   @@unique([provider, providerAccountId])
-//   }
-
-// model Session {
-//   id           String   @id @default(cuid())
-//   sessionToken String   @unique@map("session_token")
-//   userId       String   @map("user_id")
-//   expires      DateTime
-//   user         User     @relation(fields:[userId], references:[id], onDelete: Cascade)
-//   }
-
-// model User {
-//   id            String    @id @default(cuid())
-//   firstName     String?
-//   lastName      String?
-//   password      String
-//   phone         String?   
-//   email         String?@unique
-//   emailVerified DateTime?
-//   image         String?
- 
-//   accounts      Account[]
-//   sessions      Session[]
-//   }
-
-// model VerificationToken {
-//   id         Int      @id @default(autoincrement())
-//   identifier String
-//   token      String   @unique
-//   expires    DateTime
-
-//   @@unique([identifier, token])
-//   }
-
-// model PasswordResetToken {
-//   id        String   @id @default(uuid())
-//   userId    String
-//   token     String
-//   expiresAt DateTime
-// }
-
-// model Product {
-//   id             String          @id @default(uuid())
-//   name           String
-//   description    String
-//   slug           String
-//   sku            String?
-//   category       String?
-//   images         Image[]
-//   variants       ProductVariant[]
-//   price          ProductPrice?
-//   options        ProductOption[]
-//   vendor         String?
-//   tags           String[]
-//   collections    ProductCollection[]
-  
-//   createdAt DateTime @default(now())
-// }
-
-
-
-// model ProductVariant {
-//   id        String   @id @default(uuid())
-//   name      String
-//   quantity  Int
-//   price    Float
-//   productId String
-//   product   Product  @relation(fields: [productId], references: [id])
-//   cartItems      CartItem[]
-// }
-
-
-
-// model ProductOption {
-//   id        String   @id @default(uuid())
-//   name      String
-//   values    String[]
-//   productId String
-//   product   Product  @relation(fields: [productId], references: [id])
-// }
-// model ProductPrice {
-//   id        String   @id @default(uuid())
-//   amount    Float
-//   currency  String
-//   productId String   @unique
-//   product   Product? @relation(fields: [productId], references: [id])
-// }
-// model Image {
-//   id        String   @id @default(uuid())
-//   url       String
-//   productId String
-//   product   Product  @relation(fields: [productId], references: [id])
-// }
-// model Collection {
-//   id             String                @id @default(uuid())
-//   title          String
-//   description    String?
-//   products       ProductCollection[]
-//   rules          AutomaticCollectionRule[]
-// }
-
-// model ProductCollection {
-//   productId    String
-//   collectionId String
-//   product      Product    @relation(fields: [productId], references: [id])
-//   collection   Collection @relation(fields: [collectionId], references: [id])
-//   @@id([productId, collectionId])
-// }
-
-// model AutomaticCollectionRule {
-//   id             String     @id @default(uuid())
-//   field          String
-//   condition      String
-//   value          String
-//   collectionId   String
-//   collection     Collection @relation(fields: [collectionId], references: [id])
-// }
-
-
-
-// model Cart {
-//   id                String      @id @default(uuid())
-//   userId        String
-//   items             CartItem[]
-//   firstName          String?
-//   lastName          String?
-//    postalCode       String?
-//   email             String?
-//   companyName       String?
-//     address           String?
-//   phone             String?
-//   country           String?
-//   city              String?
-//   billingName       String?
-//   billingEmail      String?
-//   billingCompanyName String?
-//   billingAddress  String?
-//   paymentMethod     String?
-//   deliveryMethod    String?
-//   subtotalPrice    Float? 
-//   totalPrice       Float?
-//   currency          String?
-//    step          String?
-//   createdAt         DateTime    @default(now())
-//   updatedAt         DateTime    @updatedAt
-// }
-
-// // model DeliveryMethod {
-// //   id        String   @id @default(uuid())
-// //   price    Float
-// //   name     String
-// //   description String
-
-// // }
-// // model PaymentMethod {
-// //   id        String   @id @default(uuid())
-// //   price    Float?
-// //   name     String
-// //   description String
-
-// // }
-// model CartItem {
-//   id         String      @id @default(uuid())
-//   variantId  String
-//   variant    ProductVariant     @relation(fields: [variantId], references: [id])
-//   quantity   Int
-//   cartId     String
-//   cart       Cart        @relation(fields: [cartId], references: [id])
-// }
-
-
-
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  // Uses connection pooling
-  url = env("POSTGRES_PRISMA_URL")
-  // Uses direct connection, ⚠️ make sure to keep this to `POSTGRES_URL_NON_POOLING`
-  // or you'll have dangling databases from migrations
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
+  id                 String   @id @default(cuid())
+  userId             String   @map("user_id")
   type               String
   provider           String
-  providerAccountId  String  @map("provider_account_id")
+  providerAccountId  String   @map("provider_account_id")
   refresh_token      String?
   access_token       String?
   expires_at         Int?
@@ -233,11 +23,9 @@ model Account {
   session_state      String?
   oauth_token_secret String?
   oauth_token        String?
-
-  user               User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -248,30 +36,33 @@ model Session {
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   firstName     String?
   lastName      String?
   password      String
   phone         String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
-
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   accounts      Account[]
+  AdminUser     AdminUser?
+  Customer      Customer?
+  EventLog      EventLog[]
   sessions      Session[]
-
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  userNotifications UserNotification[]
+  roleId        String?    
+  role          Role?      @relation(fields: [roleId], references: [id]) 
+  favoriteProducts FavoriteProduct[]
   @@index([email])
 }
 
@@ -280,7 +71,6 @@ model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
-
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -292,281 +82,468 @@ model PasswordResetToken {
   userId    String
   token     String
   expiresAt DateTime
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId])
 }
 
-// model Product {
-//   id          String          @id @default(uuid())
-//   name        String
-//   description String
-//   slug        String
-//   sku         String?
-//   category    String?
-//   images      Image[]
-//   variants    ProductVariant[]
-//   price       ProductPrice?
-//   options     ProductOption[]
-//   vendor      String?
-//   tags        String[]
-//   collections ProductCollection[]
-//   availableForSale Boolean
-//   createdAt   DateTime @default(now())
-//   updatedAt   DateTime @updatedAt
+model Customer {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  phone             String?   @unique
+  address           String?
+  city              String?
+  state             String?
+  country           String?
+  postalCode        String?
+  totalOrders       Int       @default(0)
+  totalSpent        Float     @default(0)
+  lastOrderDate     DateTime?
+  averageOrderValue Float     @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  email             String?   @unique
+  firstName         String?
+  lastName          String?
+  password          String
+  carts             Cart[]
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders            Order[]
 
-//   @@index([slug])
-//   @@index([vendor])
-// }
+  @@index([userId])
+  @@index([phone])
+}
 
-// model ProductVariant {
-//   id        String        @id @default(uuid())
-//   name      String
-//   quantity  Int
-//   price     Float
-//   productId String
-//   product   Product       @relation(fields: [productId], references: [id])
-//   cartItems CartItem[]
-//   availableForSale Boolean
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   @@index([productId])
-// }
-
-// model ProductOption {
-//   id        String   @id @default(uuid())
-//   name      String
-//   values    String[]
-//   productId String
-//   product   Product  @relation(fields: [productId], references: [id])
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   @@index([productId])
-// }
-
-// model ProductPrice {
-//   id        String   @id @default(uuid())
-//   amount    Float
-//   currency  String
-//   productId String   @unique
-//   product   Product? @relation(fields: [productId], references: [id])
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   @@index([productId])
-// }
+model AdminUser {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  email     String   @unique
+  phone     String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  imageId   String?
+  image     Image?   @relation(fields: [imageId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roles     Role[]   @relation("AdminUserRoles")
+  @@index([userId])
+  @@index([email])
+  @@index([phone])
+}
 
 model Product {
-  id              String            @id @default(uuid())
-  name            String
-  description     String
-  slug            String
-  sku             String?
-  category        String?
-  images          Image[]
-  variants        ProductVariant[]
-  price           ProductPrice?
-  options         ProductOption[]
-  vendor          String?
-  tags            String[]
-  collections     ProductCollection[]
+  id               String              @id @default(uuid())
+  name             String
+  description      String
+  sku              String?
+  vendor           String?
+  tags             String[]
+  createdAt        DateTime            @default(now())
+  category         String?
+  slug             String
+  updatedAt        DateTime            @updatedAt
   availableForSale Boolean
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  images           Image[]
+  collections      ProductCollection[]
+  options          ProductOption[]
+  price            ProductPrice?
+  variants         ProductVariant[]
 
+favoritedBy FavoriteProduct[]
   @@index([slug])
   @@index([vendor])
 }
 
 model ProductVariant {
-  id              String            @id @default(uuid())
-  name            String
-  quantity        Int
-  price           Float
-  productId       String
-  product         Product           @relation(fields: [productId], references: [id])
-  cartItems       CartItem[]
+  id               String          @id @default(uuid())
+  name             String
+  productId        String
+  price            Float
+  quantity         Int
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
   availableForSale Boolean
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  variantOptions  VariantOption[]    // Relation to define variant options
+  cartItems        CartItem[]
+  OrderItem        OrderItem[]
+  product          Product         @relation(fields: [productId], references: [id])
+  variantOptions   VariantOption[]
 
   @@index([productId])
 }
 
-
 model ProductOption {
-  id              String            @id @default(uuid())
-  name            String            // e.g., Color, Size
-  values          ProductOptionValue[]
-  productId       String
-  product         Product           @relation(fields: [productId], references: [id])
-
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id        String               @id @default(uuid())
+  name      String
+  productId String
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  product   Product              @relation(fields: [productId], references: [id])
+  values    ProductOptionValue[]
 
   @@index([productId])
 }
 
 model ProductOptionValue {
-  id              String            @id @default(uuid())
-  value           String            // e.g., Red, Small
-  optionId        String
-  option          ProductOption     @relation(fields: [optionId], references: [id])
-  variantOptions  VariantOption[]    // Back-reference to VariantOption
-
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id             String          @id @default(uuid())
+  value          String
+  optionId       String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  option         ProductOption   @relation(fields: [optionId], references: [id])
+  variantOptions VariantOption[]
 
   @@index([optionId])
 }
 
 model VariantOption {
-  id              String            @id @default(uuid())
-  variantId       String
-  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade) // Specify onDelete here
-  optionValueId   String
-  optionValue     ProductOptionValue @relation(fields: [optionValueId], references: [id])
-
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id            String             @id @default(uuid())
+  variantId     String
+  optionValueId String
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  optionValue   ProductOptionValue @relation(fields: [optionValueId], references: [id])
+  variant       ProductVariant     @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   @@index([variantId])
   @@index([optionValueId])
 }
 
 model ProductPrice {
-  id              String            @id @default(uuid())
-  amount          Float
-  currency        String
-  productId       String            @unique
-  product         Product?          @relation(fields: [productId], references: [id])
+  id        String   @id @default(uuid())
+  amount    Float
+  currency  String
+  productId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
 
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  @@index([productId])
+}
+model FavoriteProduct {
+  id         String   @id @default(uuid())
+  userId     String
+  productId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+}
+model Image {
+  id        String      @id @default(uuid())
+  url       String
+  productId String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  AdminUser AdminUser[]
+  product   Product     @relation(fields: [productId], references: [id])
 
   @@index([productId])
 }
 
-model Image {
-  id        String   @id @default(uuid())
-  url       String
-  productId String
-  product   Product  @relation(fields: [productId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([productId])
+model TempImage {
+  id         String   @id @default(cuid())
+  url        String
+  imageFor   String
+  supabaseId String
+  createdAt  DateTime @default(now())
 }
 
 model Collection {
-  id          String                @id @default(uuid())
+  id          String                    @id @default(uuid())
   title       String
   description String?
-  products    ProductCollection[]
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
   rules       AutomaticCollectionRule[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  products    ProductCollection[]
 }
 
 model ProductCollection {
   productId    String
   collectionId String
-  product      Product    @relation(fields: [productId], references: [id])
   collection   Collection @relation(fields: [collectionId], references: [id])
+  product      Product    @relation(fields: [productId], references: [id])
 
   @@id([productId, collectionId])
 }
 
 model AutomaticCollectionRule {
-  id          String     @id @default(uuid())
-  field       String
-  condition   String
-  value       String
+  id           String     @id @default(uuid())
+  field        String
+  condition    String
+  value        String
   collectionId String
-  collection  Collection @relation(fields: [collectionId], references: [id])
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  collection   Collection @relation(fields: [collectionId], references: [id])
 }
 
 model Cart {
-  id                 String      @id @default(uuid())
-  userId             String
-  items              CartItem[]
+  id                 String     @id @default(uuid())
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  address            String?
+  billingAddress     String?
+  billingCompanyName String?
+  billingEmail       String?
+  billingName        String?
+  city               String?
+  companyName        String?
+  country            String?
+  currency           String?
+  deliveryMethod     String?
+  email              String?
   firstName          String?
   lastName           String?
+  paymentMethod      String?
+  phone              String?
   postalCode         String?
+  step               String?
+  subtotalPrice      Float?
+  totalPrice         Float?
+  userId             String
+  customerId         String?
+  Customer           Customer?  @relation(fields: [customerId], references: [id])
+  items              CartItem[]
+  Order      Order?
+  @@index([userId])
+}
+
+model CartItem {
+  id        String         @id @default(uuid())
+  quantity  Int
+  cartId    String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  variantId String
+  cart      Cart           @relation(fields: [cartId], references: [id])
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@index([variantId])
+  @@index([cartId])
+}
+
+model Order {
+  id                 String      @id @default(uuid())
+  userId             String
+  firstName          String?
+  lastName           String?
   email              String?
+  phone              String?
   companyName        String?
   address            String?
-  phone              String?
-  country            String?
   city               String?
+  country            String?
+  postalCode         String?
   billingName        String?
   billingEmail       String?
   billingCompanyName String?
   billingAddress     String?
   paymentMethod      String?
   deliveryMethod     String?
-  subtotalPrice      Float?
-  totalPrice         Float?
   currency           String?
+  subtotalPrice      Float
+  totalPrice         Float
+  status             OrderStatus @default(PENDING)
   step               String?
-
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
+  customerId         String?
+  Customer           Customer?   @relation(fields: [customerId], references: [id])
+  items              OrderItem[]
+   cartId            String    @unique
+  Cart              Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String         @id @default(uuid())
+  orderId   String
+  variantId String
+  quantity  Int
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  order     Order          @relation(fields: [orderId], references: [id])
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+  @@index([variantId])
+}
+
+model EventLog {
+  id           String   @id @default(uuid())
+  userId       String
+  resourceName String
+  action       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
 
-model CartItem {
-  id         String        @id @default(uuid())
-  variantId  String
-  variant    ProductVariant @relation(fields: [variantId], references: [id])
-  quantity   Int
-  cartId     String
-  cart       Cart          @relation(fields: [cartId], references: [id])
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([variantId])
-  @@index([cartId])
+model Schedule {
+  id           String       @id @default(uuid())
+  name         String
+  startDate    DateTime
+  endDate      DateTime
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  scheduleType ScheduleType
+  days         DayEnum[]    @default([])
+  daysRelation Day[]        @relation("DaySchedules")
 }
 
-// Commented out models
-
-// model DeliveryMethod {
-//   id        String   @id @default(uuid())
-//   price    Float
-//   name     String
-//   description String
-// }
-
-// model PaymentMethod {
-//   id        String   @id @default(uuid())
-//   price    Float?
-//   name     String
-//   description String
-// }
+model Day {
+  id        String     @id @default(uuid())
+  date      DateTime   @db.Date
+  dayName   DayEnum
+  year      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  schedules Schedule[] @relation("DaySchedules")
+}
 
 
+// Define enums for constants
+enum NotificationType {
+  NEW_PRODUCT
+  NEW_USER
+  STOCK_OUT
+}
+
+enum NotificationStatus {
+  OPENED
+  VIEWED
+  PENDING
+}
+
+model Notification {
+  id          String             @id @default(uuid())
+  title       String?
+  description String?
+  link        String?            
+  type        NotificationType   
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  
+  userNotifications UserNotification[]
+}
+
+model UserNotification {
+  userId         String
+  user           User            @relation(fields: [userId], references: [id])
+  notificationId String
+  notification   Notification    @relation(fields: [notificationId], references: [id])
+  status         NotificationStatus 
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  
+  @@id([userId, notificationId])
+
+  
+  @@index([userId])
+  @@index([notificationId])
+}
+
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  adminUsers  AdminUser[]  @relation("AdminUserRoles")
+  resources   Resource[]   @relation("RoleResources")
+  users       User[] 
+    createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Resource {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  roles       Role[]       @relation("RoleResources")
+    createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
 
 
 
 
+model refresh_metadata {
+  view_name           String    @id
+  last_refreshed_date DateTime? @db.Date
+}
+
+ model DailyNewCustomers {
+    day        DateTime @id @db.Date
+    new_customers Int
+
+    @@map("daily_new_customers") 
+    
+} 
+ model DailyNewOrders {
+    day        DateTime @id @db.Date
+    new_orders Int
+
+    @@map("daily_new_orders") 
+    
+} 
+model OrderStatusSummary {
+  day              DateTime @id @db.Date
+  total_orders     Int
+  pending_orders   Int
+  confirmed_orders Int
+  completed_orders Int
+  canceled_orders  Int
+  refunded_orders  Int
+  completed_revenue Float
+
+  @@map("order_status_summary")
+}
+
+model CustomerStatusSummary {
+  day            DateTime @id @db.Date
+  total_customers    Int
+  one_time_customers Int
+  returning_customers Int
+  vip_customers      Int
+  normal_customers   Int
+  active_customers   Int
+  inactive_customers Int
+  @@map("customer_status_summary")
+    
+}
 
 
 
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELED
+  REFUNDED
+}
 
+enum ScheduleType {
+  MEETING
+  APPOINTMENT
+  PERSONAL
+}
 
-
+enum DayEnum {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
