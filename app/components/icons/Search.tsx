@@ -1,19 +1,22 @@
-const Search = ({ ...props }) => {
+// src/components/icons/Search.tsx
+import type { IconProps } from "@/app/components/icons/index"
+
+export function Search({ size = 24, className, ...props }: IconProps) {
   return (
     <svg
-      className="h-10 w-10 text-primary-500 "
-      width="20"
-      height="22"
-      fill="currentColor"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
       {...props}
-      viewBox="0 0 20 20"
     >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-      />
+      <circle cx={11} cy={11} r={8} />
+      <path d="m21 21-4.3-4.3" />
     </svg>
-  );
-};
-export default Search;
+  )
+}

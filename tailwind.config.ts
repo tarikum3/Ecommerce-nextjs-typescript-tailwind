@@ -1,43 +1,151 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}', 
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  safelist: ["outline-none"],
   theme: {
     extend: {
-      maxWidth: {
-        "8xl": "1920px",
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        "primary-0": "var(--primary-0)",
-        "primary-50": "var(--primary-50)",
-        "primary-100": "var(--primary-100)",
-        "primary-200": "var(--primary-200)",
-        "primary-300": "var(--primary-300)",
-        "primary-400": "var(--primary-400)",
-        "primary-500": "var(--primary-500)",
-        "primary-600": "var(--primary-600)",
-        "primary-700": "var(--primary-700)",
-        "primary-800": "var(--primary-800)",
-        "primary-900": "var(--primary-900)",
+        primary: {
+          50: '#f9fafb',
+          100: '#f3f4f6',
+          200: '#e5e7eb',
+          300: '#d1d5db',
+          400: '#9ca3af',
+          500: '#6b7280',
+          600: '#4b5563',
+          700: '#374151',
+          800: '#1f2937',
+          900: '#111827',
+        },
+        neutral: {
+          50: '#fafafa',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
+        },
+        success: '#10b981',
+        warning: '#f59e0b',
+        error: '#ef4444',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-in-out',
+        'slide-up': 'slideUp 0.8s ease-out',
+        'slide-down': 'slideDown 0.8s ease-out',
+        'slide-in-right': 'slideInRight 0.8s ease-out',
+        'slide-in-left': 'slideInLeft 0.8s ease-out',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+        'bounce-soft': 'bounceSoft 2s ease-in-out infinite',
+        'gradient-shift': 'gradientShift 8s ease infinite',
+        'scale-in': 'scaleIn 0.5s ease-out',
+        'shimmer': 'shimmer 2s infinite linear',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite alternate',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(30px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideDown: {
+          '0%': { transform: 'translateY(-30px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideInRight: {
+          '0%': { transform: 'translateX(30px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideInLeft: {
+          '0%': { transform: 'translateX(-30px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
+        pulseSoft: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.8' },
+        },
+        bounceSoft: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
+        gradientShift: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        pulseGlow: {
+          '0%': { boxShadow: '0 0 5px rgba(107, 114, 128, 0.5)' },
+          '100%': { boxShadow: '0 0 20px rgba(107, 114, 128, 0.8)' },
+        }
       },
       boxShadow: {
-        "outline-normal": "0 0 0 2px var(--primary-300)",
-        magical:
-          "rgba(0, 0, 0, 0.02) 0px 30px 30px, rgba(0, 0, 0, 0.03) 0px 0px 8px, rgba(0, 0, 0, 0.05) 0px 1px 0px",
+        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+        'medium': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'large': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        'xl-soft': '0 25px 50px -12px rgba(0, 0, 0, 0.08)',
+        'glow': '0 0 20px rgba(107, 114, 128, 0.3)',
       },
-      lineHeight: {
-        "extra-loose": "2.2",
+      borderRadius: {
+        '4xl': '2rem',
       },
-      scale: {
-        120: "1.2",
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'hero-pattern': 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)',
       },
+      backgroundSize: {
+        'pattern': '40px 40px',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
+      },
+      maxWidth: {
+        '8xl': '88rem',
+        '9xl': '96rem',
+      },
+      zIndex: {
+        '60': '60',
+        '70': '70',
+        '80': '80',
+        '90': '90',
+        '100': '100',
+      },
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
+      }
     },
   },
   plugins: [],
-};
-export default config;
+}
+
+export default config

@@ -1,63 +1,30 @@
-import {NextIntlClientProvider} from 'next-intl';
-import {getLocale, getMessages} from 'next-intl/server';
+// src/app/layout.tsx
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "./globals.css"
+import { AnnouncementBar } from "@/app/components/layout/AnnouncementBar"
+import  Header  from "@/app/components/layout/Header"
+import  Footer  from "@/app/components/layout/Footer/Footer"
+const inter = Inter({ subsets: ["latin"] })
 
-//import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+export const metadata: Metadata = {
+  title: "StyleHub - Modern E-commerce",
+  description: "Discover premium fashion and accessories",
+}
 
-// import Layout from "@/app/components/common/Layout";
-
-// import { Suspense } from "react";
-
-
-
-
-
-
-const inter = Inter({ subsets: ["latin"] });
-const {NEXT_PUBLIC_SITE_NAME } = process.env;
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `http://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  : "http://localhost:3000";
-export const metadata = {
-  metadataBase: new URL(baseUrl),
-  title: {
-    default: NEXT_PUBLIC_SITE_NAME!,
-    template: `%s | ${NEXT_PUBLIC_SITE_NAME}`,
-  },
-  robots: {
-    follow: true,
-    index: true,
-  },
-};
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-
-  const locale = await getLocale();
- 
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messages = await getMessages();
-
+}: {
+  children: React.ReactNode
+}) {
   return (
-   
-    <html lang={locale}>
-      <body 
-      className={inter.className}
-      >
-   
-   <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
-      {/* <Layout> */}
-      {/* {children} */}
-          {/* </Layout> */}
+    <html lang="en">
+      <body className={inter.className}>
+        <AnnouncementBar />
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
-    
-  );
+  )
 }

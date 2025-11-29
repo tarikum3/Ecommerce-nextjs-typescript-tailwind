@@ -1,11 +1,13 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["views"] 
 }
 
 datasource db {
   provider  = "postgresql"
   url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
+  
 }
 
 model Account {
@@ -482,22 +484,22 @@ model refresh_metadata {
   last_refreshed_date DateTime? @db.Date
 }
 
- model DailyNewCustomers {
-    day        DateTime @id @db.Date
+view DailyNewCustomers {
+    day        DateTime @unique @db.Date
     new_customers Int
 
-    @@map("daily_new_customers") 
+    
     
 } 
- model DailyNewOrders {
-    day        DateTime @id @db.Date
+ view DailyNewOrders {
+    day        DateTime @unique @db.Date
     new_orders Int
 
-    @@map("daily_new_orders") 
+ 
     
 } 
-model OrderStatusSummary {
-  day              DateTime @id @db.Date
+view OrderStatusSummary {
+  day              DateTime @unique @db.Date
   total_orders     Int
   pending_orders   Int
   confirmed_orders Int
@@ -506,11 +508,11 @@ model OrderStatusSummary {
   refunded_orders  Int
   completed_revenue Float
 
-  @@map("order_status_summary")
+
 }
 
-model CustomerStatusSummary {
-  day            DateTime @id @db.Date
+view CustomerStatusSummary {
+  day            DateTime @unique @db.Date
   total_customers    Int
   one_time_customers Int
   returning_customers Int
@@ -518,7 +520,7 @@ model CustomerStatusSummary {
   normal_customers   Int
   active_customers   Int
   inactive_customers Int
-  @@map("customer_status_summary")
+  
     
 }
 

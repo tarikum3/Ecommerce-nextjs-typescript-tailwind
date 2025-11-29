@@ -1,13 +1,16 @@
-export { default as Info } from "./Info";
-export { default as Bag } from "./Bag";
-export { default as Cross } from "./Cross";
-export { default as Check } from "./Check";
-export { default as Sun } from "./Sun";
-export { default as Moon } from "./Moon";
-export { default as UserIcon } from "./User";
-export { default as Minus } from "./Minus";
-export { default as Plus } from "./Plus";
-export { default as Github } from "./Github";
-export { default as Google } from "./Google";
-export { default as ArrowRight } from "./ArrowRight";
-export { default as Search } from "./Search";
+// src/components/icons/index.ts
+export { Search } from './Search'
+export { User } from './User'
+export { Heart } from './Heart'
+export { ShoppingCart } from './ShoppingCart'
+export { ChevronDown } from './ChevronDown'
+export { Menu } from './Menu'
+export { X} from './X'
+export { Truck } from './Truck'
+export { Shield} from './Shield'
+export { Google} from './Google'
+
+export interface IconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number
+  className?: string
+}
