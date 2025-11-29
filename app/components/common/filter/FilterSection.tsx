@@ -25,7 +25,7 @@ interface FilterProps {
   className?: string;
 }
 
-export const ProductFilter: React.FC<FilterProps> = ({
+ const FilterSection: React.FC<FilterProps> = ({
   sections,
   onFilterChange,
   className,
@@ -188,3 +188,4 @@ export const ProductFilter: React.FC<FilterProps> = ({
     </div>
   );
 };
+export default FilterSection;
