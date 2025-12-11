@@ -1,41 +1,55 @@
-import { experimental_generateImage as generateImage } from 'ai';
-// import { runware } from '@ai-sdk/runware'; 
+import Replicate from 'replicate';
+import { storeImage } from '@/lib/storage';
 
 export const maxDuration = 60;
+
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
 
 export async function POST(req: Request) {
   try {
     const { image, prompt, itemType } = await req.json();
 
-    // Enhanced prompt to enforce structure retention
+    if (!image) {
+      return new Response(JSON.stringify({ error: 'No image provided' }), { status: 400 });
+    }
+
     const strictPrompt = `Design variation of ${itemType}. ${prompt}. 
     STRICTLY preserve the original shape, outline, and perspective of the input image. 
     Only change materials, colors, and textures. Photorealistic, 8k.`;
 
-    // Request 4 images
-    const { images } = await generateImage({
-    //   model: runware.image('runware:100@1'), 
-    model: 'google/imagen-4.0-ultra-generate-001',
-      prompt: strictPrompt,
-      n: 4, // Generate 4 variations
-      size: '1024x1024',
-      providerOptions: {
-        runware: {
-          seedImage: image,
-          strength: 0.65, // 0.65 balances staying true to shape vs allowing material changes
-          guidanceScale: 9.0 // Higher guidance forces strict prompt adherence
-        },
-      },
+    // 1. Generate images with Replicate
+    // The output is an array of temporary URLs hosted by Replicate
+    const output = await replicate.run(
+      "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+      {
+        input: {
+          image: image,
+          prompt: strictPrompt,
+          strength: 0.65,
+          guidance_scale: 9.0,
+          num_outputs: 4,
+          scheduler: "K_EULER",
+          num_inference_steps: 50
+        }
+      }
+    ) as string[];
+
+    // 2. Upload generated images to Supabase Storage in parallel
+    const storedImagePromises = output.map(async (tempUrl) => {
+      return await storeImage(tempUrl, 'images'); 
     });
 
-    // Return array of URLs
+    const storedUrls = await Promise.all(storedImagePromises);
+
+    // 3. Return the permanent Supabase URLs
     return Response.json({
-    //   images: images.map(img => img.url || `data:image/png;base64,${img.base64}`)
-    images
+      images: storedUrls
     });
 
   } catch (error) {
     console.error('Remix Error:', error);
-    return new Response(JSON.stringify({ error: 'Generation failed' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Generation or Storage failed' }), { status: 500 });
   }
 }
