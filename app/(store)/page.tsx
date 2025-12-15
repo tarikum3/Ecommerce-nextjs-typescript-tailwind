@@ -1,31 +1,31 @@
 
-// import { Hero } from "@/app/components/sections/Hero"
-import  Hero  from "@/app/components/sections/hero/Hero"
-import CategorySection from "@/app/components/Category/CategorySection";
-import TestimonialsSection from "@/app/components/sections/testimonial/TestimonialsSection";
-import FeaturedSection from "@/app/components/sections/featured/FeaturedSection";
-import FavoritesSection from "@/app/components/sections/favorite/FavoritesSection";
-//export const dynamic = "force-dynamic";
+// // import { Hero } from "@/app/components/sections/Hero"
+// import  Hero  from "@/app/components/sections/hero/Hero"
+// import CategorySection from "@/app/components/Category/CategorySection";
+// import TestimonialsSection from "@/app/components/sections/testimonial/TestimonialsSection";
+// import FeaturedSection from "@/app/components/sections/featured/FeaturedSection";
+// import FavoritesSection from "@/app/components/sections/favorite/FavoritesSection";
+// //export const dynamic = "force-dynamic";
 
-//export const revalidate = 3600;
-//export const revalidate = 3600;
-export const metadata = {
-  description: "Modalinda shop.",
-  openGraph: {
-    type: "website",
-  },
-};
-export default async function Home() {
-  return (
-    <>
-   <Hero />
-   <CategorySection />
-   <TestimonialsSection />
-   <FeaturedSection />
-   <FavoritesSection />
-    </>
-  );
-}
+// //export const revalidate = 3600;
+// //export const revalidate = 3600;
+// export const metadata = {
+//   description: "Modalinda shop.",
+//   openGraph: {
+//     type: "website",
+//   },
+// };
+// export default async function Home() {
+//   return (
+//     <>
+//    <Hero />
+//    <CategorySection />
+//    <TestimonialsSection />
+//    <FeaturedSection />
+//    <FavoritesSection />
+//     </>
+//   );
+// }
 
 
 
@@ -750,3 +750,116 @@ export default async function Home() {
 //     </div>
 //   );
 // }
+
+
+
+
+"use client";
+
+import CartComponent from "@/app/components/Checkout/CheckoutComponent";
+
+// Sample cart object that matches your Prisma schema
+const sampleCart = {
+  id: "cart_12345",
+  createdAt: new Date("2024-01-15T10:30:00Z"),
+  updatedAt: new Date("2024-01-15T10:30:00Z"),
+  userId: "user_12345",
+  customerId: null,
+  address: "123 Main Street",
+  billingAddress: "123 Main Street",
+  billingCompanyName: null,
+  billingEmail: "john@example.com",
+  billingName: "John Doe",
+  city: "New York",
+  companyName: null,
+  country: "USA",
+  currency: "USD",
+  deliveryMethod: "express",
+  email: "john@example.com",
+  firstName: "John",
+  lastName: "Doe",
+  paymentMethod: "credit_card",
+  phone: "+1234567890",
+  postalCode: "10001",
+  step: "cart",
+  subtotalPrice: 2598.00, // $2399 + $199
+  totalPrice: 2805.84, // subtotal + shipping + tax
+  items: [
+    {
+      id: "cart_item_1",
+      quantity: 1,
+      cartId: "cart_12345",
+      variantId: "variant_1",
+      createdAt: new Date("2024-01-15T10:30:00Z"),
+      updatedAt: new Date("2024-01-15T10:30:00Z"),
+      variant: {
+        id: "variant_1",
+        price: 2399.00,
+        sku: "MBP16-M3-512",
+        attributes: {
+          size: "16-inch",
+          color: "Space Gray",
+          processor: "M3 Pro"
+        },
+        product: {
+          id: "prod_1",
+          name: "MacBook Pro 16-inch",
+          brand: "Apple",
+          description: "Apple M3 Pro chip with 16-core GPU, 16GB RAM, 512GB SSD",
+          images: [],
+          rating: 4.8,
+          reviewCount: 342,
+          isBestSeller: true,
+          isNew: true,
+          specifications: {
+            "Processor": "M3 Pro",
+            "RAM": "16GB",
+            "Storage": "512GB SSD",
+            "Display": "16-inch Liquid Retina XDR"
+          }
+        }
+      }
+    },
+    {
+      id: "cart_item_2",
+      quantity: 1,
+      cartId: "cart_12345",
+      variantId: "variant_2",
+      createdAt: new Date("2024-01-15T10:30:00Z"),
+      updatedAt: new Date("2024-01-15T10:30:00Z"),
+      variant: {
+        id: "variant_2",
+        price: 199.00,
+        sku: "WH-1000XM5",
+        attributes: {
+          color: "Black",
+          connectivity: "Wireless"
+        },
+        product: {
+          id: "prod_2",
+          name: "Sony WH-1000XM5 Wireless Headphones",
+          brand: "Sony",
+          description: "Industry-leading noise cancellation with 30-hour battery life",
+          images: [],
+          rating: 4.7,
+          reviewCount: 1256,
+          isBestSeller: true,
+          isNew: false,
+          specifications: {
+            "Battery Life": "30 hours",
+            "Noise Cancellation": "Active",
+            "Bluetooth": "5.2"
+          }
+        }
+      }
+    }
+  ]
+} as const;
+
+export default function CartPage() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <CartComponent cart={sampleCart as any} />
+    </div>
+  );
+}
