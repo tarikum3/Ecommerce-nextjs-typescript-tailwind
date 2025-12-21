@@ -1,3 +1,7 @@
+
+
+
+
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -18,7 +22,9 @@ import {
   CheckCircle,
   ArrowRight,
   ChevronDown,
-  X
+  X,
+  Loader2,
+  ChevronUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -87,6 +93,55 @@ interface Product {
   };
 }
 
+// ==================== FAKE API ====================
+const fetchMoreReviews = async (
+  productId: string,
+  page: number,
+  pageSize: number = 3
+): Promise<ProductReview[]> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 400));
+  
+  const fakeAuthors = [
+    "Alex Johnson", "Sam Wilson", "Taylor Smith", "Jordan Lee", "Casey Brown",
+    "Morgan Davis", "Riley Miller", "Cameron Taylor", "Jamie Anderson", "Drew Martinez",
+    "Blake Thomas", "Skylar White", "Quinn Harris", "Avery Clark", "Reese Lewis"
+  ];
+  
+  const fakeComments = [
+    "This product exceeded my expectations! The quality is outstanding and it arrived much faster than estimated.",
+    "I've been using this for a month now and it's been absolutely perfect for my needs. Highly recommend!",
+    "Good product overall, but there are some minor issues with the finishing that could be improved.",
+    "Worth every penny! The craftsmanship is excellent and it looks even better in person than in the photos.",
+    "I was hesitant at first because of the price, but after using it for two weeks, I can confidently say it's worth it.",
+    "Perfect for my daily use. The ergonomics are well thought out and it's very comfortable to handle.",
+    "The product is good, but the packaging could be better. Mine arrived with some minor scuffs.",
+    "Absolutely love it! My friends have been asking where I got it from. Definitely a conversation starter.",
+    "Good value for money. It does exactly what it promises and the quality is solid for the price point.",
+    "I've tried similar products before, but this one stands out with its attention to detail and premium feel.",
+    "The customer service was excellent when I had questions about the product. Great experience overall!",
+    "It's decent, but I expected a bit more based on the marketing photos. Still, it serves its purpose well.",
+    "This has become my go-to product. The durability is impressive and it still looks new after heavy use.",
+    "Shipping was faster than expected and the product was well-protected. Very satisfied with my purchase.",
+    "The attention to detail is remarkable. You can tell a lot of thought went into the design and manufacturing."
+  ];
+  
+  return Array.from({ length: pageSize }, (_, i) => {
+    const authorIndex = (page * pageSize + i) % fakeAuthors.length;
+    const commentIndex = (page * pageSize + i) % fakeComments.length;
+    
+    return {
+      id: `review-${productId}-${page}-${i}`,
+      author: fakeAuthors[authorIndex],
+      initials: fakeAuthors[authorIndex].split(' ').map(n => n[0]).join(''),
+      rating: Math.floor(Math.random() * 2) + 4, // Mostly 4-5 stars
+      date: `${Math.floor(Math.random() * 12) + 1} months ago`,
+      comment: fakeComments[commentIndex],
+      verified: Math.random() > 0.3 // 70% verified
+    };
+  });
+};
+
 // ==================== MAIN COMPONENT ====================
 interface ProductDetailProps {
   product: Product;
@@ -108,7 +163,13 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     message: '',
     type: 'success'
   });
+  
+  // Reviews state with load more button
+  const [reviews, setReviews] = useState<ProductReview[]>(product.reviews);
   const [expandedReviews, setExpandedReviews] = useState<string[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [reviewPage, setReviewPage] = useState(1);
+  const [hasMoreReviews, setHasMoreReviews] = useState(true);
 
   // Calculate discount percentage
   const discountPercentage = product.originalPrice 
@@ -182,11 +243,6 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     });
   }, [isWishlisted]);
 
-  // Show notification
-  const showNotification = useCallback((message: string, type: 'success' | 'error' = 'success') => {
-    setNotification({ show: true, message, type });
-  }, []);
-
   // Toggle review expansion
   const toggleReview = useCallback((reviewId: string) => {
     setExpandedReviews(prev => 
@@ -195,6 +251,41 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         : [...prev, reviewId]
     );
   }, []);
+
+  // Load more reviews function
+  const loadMoreReviews = useCallback(async () => {
+    if (loadingReviews || !hasMoreReviews) return;
+    
+    setLoadingReviews(true);
+    
+    try {
+      const newReviews = await fetchMoreReviews(product.id, reviewPage);
+      
+      if (newReviews.length > 0) {
+        setReviews(prev => [...prev, ...newReviews]);
+        setReviewPage(prev => prev + 1);
+      } else {
+        setHasMoreReviews(false);
+      }
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+      setNotification({
+        show: true,
+        message: 'Failed to load more reviews',
+        type: 'error'
+      });
+    } finally {
+      setLoadingReviews(false);
+    }
+  }, [reviewPage, loadingReviews, hasMoreReviews, product.id]);
+
+  // Initialize with first variant
+  useEffect(() => {
+    setSelectedVariant(product.variants[0]);
+    setSelectedColor(product.variants[0].color.name);
+    setSelectedSize(product.variants[0].size);
+    setSelectedImage(product.images[0]);
+  }, [product]);
 
   // Hide notification after delay
   useEffect(() => {
@@ -206,12 +297,12 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     }
   }, [notification.show]);
 
-  // Initialize with first variant
+  // Reset reviews when product changes
   useEffect(() => {
-    setSelectedVariant(product.variants[0]);
-    setSelectedColor(product.variants[0].color.name);
-    setSelectedSize(product.variants[0].size);
-    setSelectedImage(product.images[0]);
+    setReviews(product.reviews);
+    setReviewPage(1);
+    setHasMoreReviews(true);
+    setExpandedReviews([]);
   }, [product]);
 
   // ==================== SUB-COMPONENTS ====================
@@ -421,7 +512,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
               "w-5 h-5",
               i < Math.floor(product.rating)
                 ? "fill-amber-400 text-amber-400"
-                : i < product.rating
+              : i < product.rating
                 ? "fill-amber-400 text-amber-400"
                 : "text-gray-300"
             )}
@@ -523,14 +614,68 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     </div>
   );
 
-  // Reviews Component
+  // Review Card Component
+  const ReviewCard = ({ review }: { review: ProductReview }) => (
+    <div className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-sm">
+      <div className="flex items-start gap-4 mb-4">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-sm">
+          <span className="text-white font-bold text-sm">{review.initials}</span>
+        </div>
+        <div className="flex-1">
+          <div className="flex justify-between items-start">
+            <div>
+              <h4 className="font-semibold text-gray-900">{review.author}</h4>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={cn(
+                        "w-4 h-4",
+                        i < review.rating
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-gray-300"
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className="text-sm text-gray-500">{review.date}</span>
+              </div>
+            </div>
+            {review.verified && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
+                <CheckCircle className="w-3 h-3" />
+                Verified
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+      <p className={cn(
+        "text-gray-700",
+        !expandedReviews.includes(review.id) && "line-clamp-3"
+      )}>
+        {review.comment}
+      </p>
+      {review.comment.length > 200 && (
+        <button
+          onClick={() => toggleReview(review.id)}
+          className="mt-2 text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors"
+        >
+          {expandedReviews.includes(review.id) ? "Show less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
+
+  // Reviews Component with Scrollable Reviews List
   const ReviewsSection = () => (
     <div className="mt-16">
       <h2 className="text-2xl font-bold text-gray-900 mb-2">Customer Reviews</h2>
       <p className="text-gray-600 mb-8">See what our customers are saying</p>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Review Summary */}
+        {/* Review Summary - Fixed height, no scroll */}
         <div>
           <div className="flex items-center gap-6 mb-8">
             <div>
@@ -550,60 +695,71 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           </button>
         </div>
         
-        {/* Reviews List */}
-        <div className="space-y-6">
-          {product.reviews.map(review => (
-            <div key={review.id} className="bg-gray-50 rounded-xl p-6">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-sm">
-                  <span className="text-white font-bold text-sm">{review.initials}</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{review.author}</h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={cn(
-                                "w-4 h-4",
-                                i < review.rating
-                                  ? "fill-amber-400 text-amber-400"
-                                  : "text-gray-300"
-                              )}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-500">{review.date}</span>
-                      </div>
-                    </div>
-                    {review.verified && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
-                        <CheckCircle className="w-3 h-3" />
-                        Verified
-                      </span>
-                    )}
-                  </div>
+        {/* Reviews List - Scrollable container */}
+        <div className="relative">
+          <div 
+            className="space-y-6 h-[500px] overflow-y-auto pr-4 pb-6 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+          >
+            {/* Show all loaded reviews */}
+            {reviews.map(review => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+            
+            {/* Loading indicator when fetching more reviews */}
+            {loadingReviews && (
+              <div className="flex justify-center py-6">
+                <div className="flex items-center gap-3 text-gray-600">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Loading more reviews...</span>
                 </div>
               </div>
-              <p className={cn(
-                "text-gray-700",
-                !expandedReviews.includes(review.id) && "line-clamp-3"
-              )}>
-                {review.comment}
-              </p>
-              {review.comment.length > 200 && (
-                <button
-                  onClick={() => toggleReview(review.id)}
-                  className="mt-2 text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors"
-                >
-                  {expandedReviews.includes(review.id) ? "Show less" : "Read more"}
-                </button>
-              )}
-            </div>
-          ))}
+            )}
+            
+            {/* End of reviews message */}
+            {!hasMoreReviews && reviews.length > 0 && (
+              <div className="text-center py-6 border-t border-gray-200">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-full">
+                  <CheckCircle className="w-4 h-4" />
+                  <span className="text-sm font-medium">All reviews loaded</span>
+                </div>
+                <p className="text-gray-500 mt-2">
+                  Showing all {reviews.length} reviews
+                </p>
+              </div>
+            )}
+          </div>
+          
+          {/* Load More Reviews Button - Fixed position below scrollable area */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            {hasMoreReviews ? (
+              <button
+                onClick={loadMoreReviews}
+                disabled={loadingReviews}
+                className={cn(
+                  "w-full py-3 px-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-medium hover:from-primary-700 hover:to-primary-800 transition-all duration-300 hover:shadow-md flex items-center justify-center gap-2",
+                  loadingReviews && "opacity-70 cursor-not-allowed"
+                )}
+              >
+                {loadingReviews ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    <span>Load More Reviews</span>
+                  </>
+                )}
+              </button>
+            ) : (
+              <div className="text-center">
+                <p className="text-gray-500 text-sm">
+                  All reviews loaded • Showing {reviews.length} reviews
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
