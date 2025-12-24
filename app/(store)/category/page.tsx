@@ -2251,7 +2251,8 @@ export default function ProductsPage() {
                   onSelectSort={handleSortSelect}
                   showDesktopSort={showDesktopSort}
                   onToggleDesktopSort={() => setShowDesktopSort(!showDesktopSort)}
-                  desktopSortRef={desktopSortRef}
+                  // desktopSortRef={desktopSortRef}
+                  desktopSortRef={desktopSortRef.current ? desktopSortRef as React.RefObject<HTMLDivElement> : undefined}
                 />
               </div>
               
