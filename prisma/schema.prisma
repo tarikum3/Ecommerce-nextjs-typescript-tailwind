@@ -132,7 +132,24 @@ model AdminUser {
   @@index([email])
   @@index([phone])
 }
+model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  parentId    String?    @map("parent_id") @db.Uuid
+  slug        String     @unique @db.Citext // Case-insensitive text
+  name        String
+  description String?
+  path        String?    // 'ltree' is not natively typed in Prisma, usually handled as String
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
+  // Relations
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+  products Product[]
+
+  @@index([parentId])
+  @@map("categories")
+}
 model Product {
   id               String              @id @default(uuid())
   name             String
@@ -141,7 +158,6 @@ model Product {
   vendor           String?
   tags             String[]
   createdAt        DateTime            @default(now())
-  category         String?
   slug             String
   updatedAt        DateTime            @updatedAt
   availableForSale Boolean
@@ -154,7 +170,77 @@ model Product {
 favoritedBy FavoriteProduct[]
   @@index([slug])
   @@index([vendor])
+categoryId  String?  @map("category_id") @db.Uuid
+category    Category?               @relation(fields: [categoryId], references: [id])
+
+  reviews     Review[]
+  aggregate   ProductReviewAggregate?
+
 }
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+}
+
+model Review {
+  id                 String       @id @default(uuid()) @db.Uuid
+  productId          String       @map("product_id") @db.Uuid
+  userId             String       @map("user_id") @db.Uuid // Assumes external User table
+  parentId           String?      @map("parent_id") @db.Uuid
+  
+  rating             Int?         @db.SmallInt // 1-5, null for replies
+  title              String?
+  body               String?
+  isVerifiedPurchase Boolean      @default(false) @map("is_verified_purchase")
+  status             ReviewStatus @default(pending)
+  helpfulVotes       Int          @default(0) @map("helpful_votes")
+
+  createdAt          DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  product  Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  parent   Review?      @relation("ReviewHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Review[]     @relation("ReviewHierarchy")
+  votes    ReviewVote[]
+
+  // Ensure unique rating per user per product
+  @@unique([userId, productId], name: "unique_user_product_rating")
+  @@index([productId, status])
+  @@map("reviews")
+}
+
+// --------------------------------------------------------
+// 5. Review Votes
+// --------------------------------------------------------
+model ReviewVote {
+  reviewId  String   @map("review_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  voteType  Int      @map("vote_type") @db.SmallInt // 1 or -1
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@id([reviewId, userId]) // Composite Key
+  @@map("review_votes")
+}
+
+// --------------------------------------------------------
+// 6. Materialized Aggregates (Performance)
+// --------------------------------------------------------
+model ProductReviewAggregate {
+  productId          String  @id @map("product_id") @db.Uuid
+  averageRating      Decimal @default(0) @map("average_rating") @db.Decimal(3, 2)
+  reviewCount        Int     @default(0) @map("review_count")
+  ratingDistribution Json    @default("{\"1\": 0, \"2\": 0, \"3\": 0, \"4\": 0, \"5\": 0}") @map("rating_distribution")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_review_aggregates")
+}
+
+
 
 model ProductVariant {
   id               String          @id @default(uuid())
