@@ -1036,12 +1036,6 @@ interface Product {
   updatedAt: string;
 }
 
-interface ShippingInfo {
-  freeShipping: boolean;
-  estimatedDelivery: string;
-  returnPolicy: string;
-}
-
 // ==================== UTILS ====================
 const getVariantOptions = (variant: ProductVariant) => {
   const options: Record<string, string> = {};
@@ -1058,7 +1052,6 @@ const getUniqueColors = (variants: ProductVariant[]) => {
     const options = getVariantOptions(variant);
     const color = options["Color"] || options["color"] || options["Colour"];
     if (color && !colors.has(color)) {
-      // Generate a consistent hex color from the color name
       const hex = stringToColor(color);
       colors.set(color, { name: color, hex });
     }
@@ -1092,6 +1085,13 @@ const stringToColor = (str: string) => {
     color += ('00' + value.toString(16)).substr(-2);
   }
   return color;
+};
+
+// Default shipping info
+const defaultShippingInfo = {
+  freeShipping: true,
+  estimatedDelivery: "2-4 business days",
+  returnPolicy: "30-day return policy"
 };
 
 // ==================== FAKE API ====================
@@ -1147,29 +1147,15 @@ const fetchMoreReviews = async (
 // ==================== MAIN COMPONENT ====================
 interface ProductDetailProps {
   product: Product;
-  shippingInfo?: ShippingInfo;
-  isWishlisted?: boolean;
-  onWishlistToggle?: () => Promise<void>;
-  onAddToCart?: (variantId: string, quantity: number) => Promise<void>;
 }
 
-export default function ProductDetail({ 
-  product, 
-  shippingInfo = {
-    freeShipping: true,
-    estimatedDelivery: "2-4 business days",
-    returnPolicy: "30-day return policy"
-  },
-  isWishlisted: initialWishlisted = false,
-  onWishlistToggle,
-  onAddToCart
-}: ProductDetailProps) {
+export default function ProductDetail({ product }: ProductDetailProps) {
   // State management
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.url || "");
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [quantity, setQuantity] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(initialWishlisted);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
@@ -1244,12 +1230,8 @@ export default function ProductDetail({
     setIsAddingToCart(true);
     
     try {
-      if (onAddToCart) {
-        await onAddToCart(selectedVariant.id, quantity);
-      } else {
-        // Fallback to local simulation
-        await new Promise(resolve => setTimeout(resolve, 1500));
-      }
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       setIsAddingToCart(false);
       setIsAddedToCart(true);
@@ -1269,28 +1251,17 @@ export default function ProductDetail({
         type: 'error'
       });
     }
-  }, [selectedVariant, quantity, product.name, onAddToCart]);
+  }, [selectedVariant, quantity, product.name]);
 
   // Handle wishlist toggle
-  const handleWishlistToggle = useCallback(async () => {
-    try {
-      if (onWishlistToggle) {
-        await onWishlistToggle();
-      }
-      setIsWishlisted(prev => !prev);
-      setNotification({
-        show: true,
-        message: isWishlisted ? 'Removed from wishlist' : 'Added to wishlist',
-        type: 'success'
-      });
-    } catch (error) {
-      setNotification({
-        show: true,
-        message: 'Failed to update wishlist',
-        type: 'error'
-      });
-    }
-  }, [isWishlisted, onWishlistToggle]);
+  const handleWishlistToggle = useCallback(() => {
+    setIsWishlisted(prev => !prev);
+    setNotification({
+      show: true,
+      message: isWishlisted ? 'Removed from wishlist' : 'Added to wishlist',
+      type: 'success'
+    });
+  }, [isWishlisted]);
 
   // Toggle review expansion
   const toggleReview = useCallback((reviewId: string) => {
@@ -1532,7 +1503,8 @@ export default function ProductDetail({
 
   // Rating Component
   const RatingDisplay = () => {
-    const rating = product.aggregate?.averageRating || product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length || 0;
+    const rating = product.aggregate?.averageRating || 
+      product.reviews.reduce((acc, r) => acc + r.rating, 0) / (product.reviews.length || 1);
     const reviewCount = product.aggregate?.reviewCount || product.reviews.length;
 
     return (
@@ -1627,9 +1599,9 @@ export default function ProductDetail({
           </div>
           <div>
             <p className="font-medium text-gray-900">
-              {shippingInfo.freeShipping ? "Free Shipping" : "Standard Shipping"}
+              {defaultShippingInfo.freeShipping ? "Free Shipping" : "Standard Shipping"}
             </p>
-            <p className="text-sm text-gray-500">{shippingInfo.estimatedDelivery}</p>
+            <p className="text-sm text-gray-500">{defaultShippingInfo.estimatedDelivery}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -1647,7 +1619,7 @@ export default function ProductDetail({
           </div>
           <div>
             <p className="font-medium text-gray-900">Easy Returns</p>
-            <p className="text-sm text-gray-500">{shippingInfo.returnPolicy}</p>
+            <p className="text-sm text-gray-500">{defaultShippingInfo.returnPolicy}</p>
           </div>
         </div>
       </div>

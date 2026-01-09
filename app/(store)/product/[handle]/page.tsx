@@ -177,10 +177,6 @@
 // }
 
 
-
-
-
-
 // app/product/[handle]/page.tsx
 import ProductDetail from "@/app/components/Product/ProductDetail";
 
@@ -554,31 +550,6 @@ async function fetchProductData(handle: string) {
   };
 }
 
-// Optional: Fetch wishlist status from your API
-async function fetchWishlistStatus(productId: string): Promise<boolean> {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 50));
-  return false; // Default to not wishlisted
-}
-
-// Optional: Mock handlers for actions
-const handleWishlistToggle = async () => {
-  // In real implementation, this would call your API to toggle FavoriteProduct
-  console.log("Toggling wishlist");
-  // Example API call:
-  // await fetch(`/api/wishlist/${productId}`, { method: 'POST' });
-};
-
-const handleAddToCart = async (variantId: string, quantity: number) => {
-  // In real implementation, this would call your API to add to Cart/CartItem
-  console.log(`Adding ${quantity} of variant ${variantId} to cart`);
-  // Example API call:
-  // await fetch('/api/cart', {
-  //   method: 'POST',
-  //   body: JSON.stringify({ variantId, quantity })
-  // });
-};
-
 export default async function ProductPage({ 
   params 
 }: { 
@@ -587,20 +558,8 @@ export default async function ProductPage({
   // Fetch product data using fake API
   const product = await fetchProductData(params.handle);
   
-  // Optionally fetch wishlist status
-  const isWishlisted = await fetchWishlistStatus(product.id);
-  
-  return (
-    <ProductDetail 
-      product={product} 
-      isWishlisted={isWishlisted}
-      onWishlistToggle={handleWishlistToggle}
-      onAddToCart={handleAddToCart}
-      shippingInfo={{
-        freeShipping: true,
-        estimatedDelivery: "2-3 business days",
-        returnPolicy: "30-day return policy with free returns"
-      }}
-    />
-  );
+  return <ProductDetail product={product} />;
 }
+
+
+
